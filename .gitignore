@@ -13,8 +13,13 @@
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+/migrations/
 
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
