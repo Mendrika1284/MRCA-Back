@@ -4,11 +4,24 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class BackController extends AbstractController
 {
+    private $requestStack;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+
+        // Accessing the session in the constructor is *NOT* recommended, since
+        // it might not be accessible yet or lead to unwanted side-effects
+        // $this->session = $requestStack->getSession();
+    }
+    
     #[Route('/login', name: 'security.login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -23,15 +36,22 @@ class BackController extends AbstractController
 
     #[Route('/logout', name: 'security.logout')]
     public function logout(): Response
-    {
-        return $this->redirect($this->generateUrl('/'));
-    }    
+    {}    
 
     #[Route('/', name: 'app_accueil')]
-    public function index(): Response
+    public function index(UserInterface $user): Response
     {
-        return $this->render('main/index.html.twig', [
-            'controller_name' => 'BackController',
-        ]);
+        if(!empty($user)){
+            $userId = $user->getNom();
+            $session = $this->requestStack->getSession();
+            $session->set('nomUtilisateur', $userId);
+            return $this->render('main/index.html.twig', [
+                'controller_name' => 'BackController',
+                'nomUtilisateur' => $session->get('nomUtilisateur')
+            ]);
+        }else{
+            return $this->redirect('/login');
+        }
+
     }
 }
