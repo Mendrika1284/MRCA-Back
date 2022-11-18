@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -39,7 +40,7 @@ class BackController extends AbstractController
     {}    
 
     #[Route('/', name: 'app_accueil')]
-    public function index(UserInterface $user): Response
+    public function index(UserInterface $user, Request $request): Response
     {
         if(!empty($user)){
             $userId = $user->getNom();
@@ -50,8 +51,21 @@ class BackController extends AbstractController
                 'nomUtilisateur' => $session->get('nomUtilisateur')
             ]);
         }else{
-            return $this->redirect('/login');
+            $request->getSession()->getFlashBag()->add(
+                'warning',
+                'Veuillez vous connecter!'
+            );
+            return $this->redirectToRoute('/login');
         }
-
     }
+
+    #[Route('/moncompte', name: 'app_moncompte')]
+    public function monCompte(): Response
+    {
+        return $this->render('main/index.html.twig', [
+            'controller_name' => 'BackController',
+            'nomUtilisateur' => $session->get('nomUtilisateur')
+        ]);
+    }   
+
 }
