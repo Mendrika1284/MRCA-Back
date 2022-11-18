@@ -2,19 +2,30 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class BackController extends AbstractController
 {
-    #[Route('/login', name: 'app_login', methods: ['GET', 'POST'])]
-    public function login(): Response
+    #[Route('/login', name: 'security.login', methods: ['GET', 'POST'])]
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
+
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
         return $this->render('login.html.twig', [
-            'controller_name' => 'BackController',
+            'last_username' => $lastUsername,
+            'error'         => $error,
         ]);
     }
+
+    #[Route('/logout', name: 'security.logout')]
+    public function logout(): Response
+    {
+        return $this->redirect($this->generateUrl('/'));
+    }    
 
     #[Route('/', name: 'app_accueil')]
     public function index(): Response

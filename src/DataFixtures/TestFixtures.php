@@ -40,6 +40,23 @@ class TestFixtures extends Fixture
             $manager->persist($utilisateur);
         }
 
+        $utilisateur = new Utilisateur();
+            $utilisateur->setNom($faker->name())
+            ->setPrenom($faker->firstName())
+            ->setContact($faker->randomNumber())
+            ->setAdresse($faker->word())
+            ->setEmail($faker->email())
+            ->setRoles(['ROLE_ADMIN']);
+
+            $hashed = $this->hasher->hashPassword(
+                $utilisateur,
+                'password'
+            );
+
+            $utilisateur->setPassword($hashed);
+    
+            $manager->persist($utilisateur);
+
         $manager->flush();
     }
 }
