@@ -2,28 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Client;
-use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-
-#[Route('/api', name: 'api_')]
 
 class MainController extends AbstractController
 {
-
-    #[Route('/login', name: 'app_login')]
-    public function login(): Response
-    {
-        return $this->render('login.html.twig', [
-            'controller_name' => 'MainController',
-        ]);
-    }
-
-    #[Route('/registerfront', name: 'registerfront', methods: 'POST')]
+/*#[Route('/registerfront', name: 'registerfront', methods: 'POST')]
     public function inscriptionFront(ManagerRegistry $doctrine, Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $em = $doctrine->getManager();
@@ -56,5 +41,5 @@ class MainController extends AbstractController
         $em->flush();
 
         return $this->json('Client Enregistrer', 200);
-    }
+    }*/
 }
