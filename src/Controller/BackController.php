@@ -17,10 +17,6 @@ class BackController extends AbstractController
     public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
-
-        // Accessing the session in the constructor is *NOT* recommended, since
-        // it might not be accessible yet or lead to unwanted side-effects
-        // $this->session = $requestStack->getSession();
     }
     
     #[Route('/login', name: 'security.login', methods: ['GET', 'POST'])]
@@ -66,6 +62,6 @@ class BackController extends AbstractController
             'controller_name' => 'BackController',
             'nomUtilisateur' => $session->get('nomUtilisateur')
         ]);
-    }   
+    }
 
 }
