@@ -23,7 +23,7 @@ class TestFixtures extends Fixture
         $faker = Factory::create('fr:FR');
         for($i = 0; $i < 10; $i++){
             $utilisateur = new Utilisateur();
-            $utilisateur->setNom($faker->name())
+            $utilisateur->setNom($faker->lastName())
             ->setPrenom($faker->firstName())
             ->setContact($faker->randomNumber())
             ->setAdresse($faker->word())
@@ -35,13 +35,14 @@ class TestFixtures extends Fixture
                 'password'
             );
 
-            $utilisateur->setPassword($hashed);
+            $utilisateur->setPassword($hashed)
+            ->setStatusCompte(random_int(0, 1));
     
             $manager->persist($utilisateur);
         }
 
         $utilisateur = new Utilisateur();
-            $utilisateur->setNom($faker->name())
+            $utilisateur->setNom($faker->lastName())
             ->setPrenom($faker->firstName())
             ->setContact($faker->randomNumber())
             ->setAdresse($faker->word())
@@ -53,7 +54,8 @@ class TestFixtures extends Fixture
                 'password'
             );
 
-            $utilisateur->setPassword($hashed);
+            $utilisateur->setPassword($hashed)
+            ->setStatusCompte(random_int(0, 1));
     
             $manager->persist($utilisateur);
 

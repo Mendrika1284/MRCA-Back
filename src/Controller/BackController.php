@@ -10,9 +10,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class BackController extends AbstractController
+class BackController extends BaseController
 {
-    private $requestStack;
+    protected $requestStack;
 
     public function __construct(RequestStack $requestStack)
     {
@@ -38,30 +38,24 @@ class BackController extends AbstractController
     #[Route('/', name: 'app_accueil')]
     public function index(UserInterface $user, Request $request): Response
     {
-        if(!empty($user)){
-            $userId = $user->getNom();
+        if(!empty($user) && $user->getRoles()[0] == "ROLE_ADMIN"){
+            $userName = $user->getNom();
+            $userId = $user->getId();
             $session = $this->requestStack->getSession();
-            $session->set('nomUtilisateur', $userId);
+            $session->set('nomUtilisateur', $userName);
+            $session->set('idUtilisateur', $userId);
             return $this->render('main/index.html.twig', [
                 'controller_name' => 'BackController',
-                'nomUtilisateur' => $session->get('nomUtilisateur')
+                'nomUtilisateur' => $session->get('nomUtilisateur'),
+                'idUtilisateur' =>$session->get('idUtilisateur')
             ]);
         }else{
-            $request->getSession()->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
-                'Veuillez vous connecter!'
+                "Veuillez vous connecter"
             );
-            return $this->redirectToRoute('/login');
+            return $this->redirectToRoute('security.logout');
         }
-    }
-
-    #[Route('/moncompte', name: 'app_moncompte')]
-    public function monCompte(): Response
-    {
-        return $this->render('main/index.html.twig', [
-            'controller_name' => 'BackController',
-            'nomUtilisateur' => $session->get('nomUtilisateur')
-        ]);
     }
 
 }
