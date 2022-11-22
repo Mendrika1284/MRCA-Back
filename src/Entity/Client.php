@@ -25,10 +25,10 @@ class Client
     private ?string $civilite = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $photo = null;
+    private string $photo;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $statusCompte = null;
+    private ?int $statusCompte = 1;
 
     public function getId(): ?int
     {

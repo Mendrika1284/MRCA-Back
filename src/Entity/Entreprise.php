@@ -21,6 +21,9 @@ class Entreprise
     private ?Utilisateur $idUtilisateur = null;
 
     #[ORM\Column(length: 255)]
+    private ?string $nomEntreprise = null;
+
+    #[ORM\Column(length: 255)]
     private ?string $siret = null;
 
     #[ORM\Column(length: 255)]
@@ -63,6 +66,18 @@ class Entreprise
     public function setTva(string $tva): self
     {
         $this->tva = $tva;
+
+        return $this;
+    }
+
+    public function getNomEntreprise(): ?string
+    {
+        return $this->nomEntreprise;
+    }
+
+    public function setNomEntreprise(string $nomEntreprise): self
+    {
+        $this->nomEntreprise = $nomEntreprise;
 
         return $this;
     }
