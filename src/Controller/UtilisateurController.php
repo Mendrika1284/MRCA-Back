@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\Artisan;
 use App\Entity\Entreprise;
 use App\Entity\Utilisateur;
 use App\Form\AjoutClientType;
+use App\Form\AjoutArtisanType;
 use App\Form\AjoutEntrepriseType;
 use App\Form\AjoutUtilisateurType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -112,6 +114,34 @@ class UtilisateurController extends baseController
         }
 
         return $this->render('main/utilisateur/ajout/ajoutEntreprise.html.twig', [
+            'nomUtilisateur' => $this->sessionUtilisateur,
+            'form' => $form->createView()
+        ]);
+    }
+
+
+    #[Route('/ajout_professionnel', name: 'app_ajout_professionnel', methods: ['GET','POST'])]
+    public function ajoutProfessionnel(Request $request, EntityManagerInterface $manager){
+        $artisan = new Artisan();
+        $form = $this->createForm(AjoutArtisanType::class, $artisan);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $artisan = $form->getData();
+
+            $this->addFlash(
+                'success',
+                "Le compte professionnel a été enregistrer"
+            );
+
+            $manager->persist($artisan);
+            $manager->flush();
+
+            return $this->redirectToRoute('app_ajout_artisan');
+        }
+
+        return $this->render('main/utilisateur/ajout/ajoutArtisan.html.twig', [
             'nomUtilisateur' => $this->sessionUtilisateur,
             'form' => $form->createView()
         ]);

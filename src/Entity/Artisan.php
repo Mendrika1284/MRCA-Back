@@ -30,9 +30,6 @@ class Artisan
     private ?string $photoCouverture = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $categorieMetier = null;
-
-    #[ORM\Column(length: 255)]
     private ?string $statusJuridique = null;
 
     #[ORM\Column(length: 255)]
@@ -49,6 +46,10 @@ class Artisan
 
     #[ORM\Column(length: 255)]
     private ?string $bic = null;
+
+    #[ORM\ManyToOne(inversedBy: 'artisans')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?CategorieMetier $idCategorieMetier = null;
 
     public function getId(): ?int
     {
@@ -175,14 +176,14 @@ class Artisan
         return $this;
     }
 
-    public function getCategorieMetier(): ?string
+    public function getIdCategorieMetier(): ?CategorieMetier
     {
-        return $this->categorieMetier;
+        return $this->idCategorieMetier;
     }
 
-    public function setCategorieMetier(string $categorieMetier): self
+    public function setIdCategorieMetier(?CategorieMetier $idCategorieMetier): self
     {
-        $this->categorieMetier = $categorieMetier;
+        $this->idCategorieMetier = $idCategorieMetier;
 
         return $this;
     }
