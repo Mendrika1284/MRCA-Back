@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\Entreprise;
 use App\Entity\Utilisateur;
 use App\Form\AjoutClientType;
+use App\Form\AjoutEntrepriseType;
 use App\Form\AjoutUtilisateurType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UtilisateurRepository;
@@ -83,6 +85,33 @@ class UtilisateurController extends baseController
         }
 
         return $this->render('main/utilisateur/ajout/ajoutClient.html.twig', [
+            'nomUtilisateur' => $this->sessionUtilisateur,
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/ajout_entreprise', name: 'app_ajout_entreprise', methods: ['GET','POST'])]
+    public function ajoutEntreprise(Request $request, EntityManagerInterface $manager){
+        $entreprise = new Entreprise();
+        $form = $this->createForm(AjoutEntrepriseType::class, $entreprise);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $client = $form->getData();
+
+            $this->addFlash(
+                'success',
+                "Le compte entreprise a été enregistrer"
+            );
+
+            $manager->persist($entreprise);
+            $manager->flush();
+
+            return $this->redirectToRoute('app_ajout_entreprise');
+        }
+
+        return $this->render('main/utilisateur/ajout/ajoutEntreprise.html.twig', [
             'nomUtilisateur' => $this->sessionUtilisateur,
             'form' => $form->createView()
         ]);
