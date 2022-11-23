@@ -14,11 +14,13 @@ use App\Form\AjoutEntrepriseType;
 use App\Form\AjoutUtilisateurType;
 use App\Repository\ClientRepository;
 use App\Repository\ArtisanRepository;
+use App\Repository\EntrepriseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UtilisateurRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\AdministrateurRepository;
+use App\Repository\CategorieMetierRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -192,15 +194,48 @@ class UtilisateurController extends baseController
     #[Route('/voirUtilisateur/{id}', name: 'app_voir_utilisateur', methods: ['GET','POST'])]
     public function voirUtilisateur(int $id,
         UtilisateurRepository $utilisateurRepository,
+        EntrepriseRepository $entrepriseRepository,
         ClientRepository $clientRepository,
         ArtisanRepository $artisanRepository,
-        AdministrateurRepository $adminRepository){
+        AdministrateurRepository $adminRepository,
+        CategorieMetierRepository $metierRepository){
         $utilisateur = $utilisateurRepository->find($id);
-
-        return $this->render('main/utilisateur/voir.html.twig', [
-            'nomUtilisateur' => $this->sessionUtilisateur,
-            'id' => $id
-        ]);
+        
+        if(strcmp($utilisateur->getRoles()[0],"ROLE_CLIENT") == 0){
+            $client = $clientRepository->findOneBy(['idUtilisateur'=>$id]);
+            return $this->render('main/utilisateur/voir.html.twig', [
+                'nomUtilisateur' => $this->sessionUtilisateur,
+                'role' => "client",
+                'utilisateur' => $utilisateur,
+                'client' => $client
+            ]);
+        }else if(strcmp($utilisateur->getRoles()[0],"ROLE_ENTREPRISE") == 0){
+            $entreprise = $entrepriseRepository->findOneBy(['idUtilisateur'=>$id]);
+            return $this->render('main/utilisateur/voir.html.twig', [
+                'nomUtilisateur' => $this->sessionUtilisateur,
+                'role' => "entreprise",
+                'utilisateur' => $utilisateur,
+                'entreprise' => $entreprise
+            ]);
+        }else if(strcmp($utilisateur->getRoles()[0],"ROLE_PROFESSIONNAL") == 0){
+            $artisan = $artisanRepository->findOneBy(['idUtilisateur'=>$id]);
+            $metier = $metierRepository->findOneBy(['idUtilisateur'=>$id]);
+            return $this->render('main/utilisateur/voir.html.twig', [
+                'nomUtilisateur' => $this->sessionUtilisateur,
+                'role' => "artisan",
+                'utilisateur' => $utilisateur,
+                'artisan' => $artisan,
+                'metier' => $metier
+            ]);
+        }else if(strcmp($utilisateur->getRoles()[0],"ROLE_ADMIN") == 0){
+            $admin = $adminRepository->findOneBy(['idUtilisateur'=>$id]);
+            return $this->render('main/utilisateur/voir.html.twig', [
+                'nomUtilisateur' => $this->sessionUtilisateur,
+                'role' => "admin",
+                'utilisateur' => $utilisateur,
+                'admin' => $admin
+            ]);
+        }
     }
 
     #[Route('/activerUtilisateur/{id}', name: 'app_activer_utilisateur', methods: ['GET','POST'])]
