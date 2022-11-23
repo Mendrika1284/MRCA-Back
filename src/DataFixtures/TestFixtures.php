@@ -21,14 +21,14 @@ class TestFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr:FR');
-        for($i = 0; $i < 10; $i++){
+/*        for($i = 0; $i < 10; $i++){
             $utilisateur = new Utilisateur();
             $utilisateur->setNom($faker->lastName())
             ->setPrenom($faker->firstName())
             ->setContact($faker->randomNumber())
             ->setAdresse($faker->word())
             ->setEmail($faker->email())
-            ->setRoles(['ROLE_USER']);
+            ->setRoles(['ROLE_C']);
 
             $hashed = $this->hasher->hashPassword(
                 $utilisateur,
@@ -40,7 +40,7 @@ class TestFixtures extends Fixture
     
             $manager->persist($utilisateur);
         }
-
+*/
         $utilisateur = new Utilisateur();
             $utilisateur->setNom($faker->lastName())
             ->setPrenom($faker->firstName())
@@ -55,7 +55,7 @@ class TestFixtures extends Fixture
             );
 
             $utilisateur->setPassword($hashed)
-            ->setStatusCompte(random_int(0, 1));
+            ->setStatusCompte(0);
     
             $manager->persist($utilisateur);
 

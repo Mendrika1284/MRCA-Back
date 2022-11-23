@@ -12,9 +12,13 @@ use App\Entity\Administrateur;
 use App\Form\AjoutArtisanType;
 use App\Form\AjoutEntrepriseType;
 use App\Form\AjoutUtilisateurType;
+use App\Repository\ClientRepository;
+use App\Repository\ArtisanRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UtilisateurRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\AdministrateurRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -52,13 +56,22 @@ class UtilisateurController extends baseController
 
             $this->addFlash(
                 'success',
-                "Le compte a été enregistrer"
+                "Veuillez completer ces informations"
             );
 
             $manager->persist($utilisateur);
             $manager->flush();
+            $role = $form['roles']->getData();
 
-            return $this->redirectToRoute('app_ajout_utilisateur');
+            if(strcmp($role[0], "ROLE_CLIENT") == 0){
+                return $this->redirectToRoute('app_ajout_client');
+            }else if(strcmp($role[0], "ROLE_ENTREPRISE") == 0){
+                return $this->redirectToRoute('app_ajout_entreprise');
+            }else if(strcmp($role[0], "ROLE_PROFESSIONNAL") == 0){
+                return $this->redirectToRoute('app_ajout_artisan');
+            }else if(strcmp($role[0], "ROLE_ADMIN") == 0){
+                return $this->redirectToRoute('app_ajout_admin');
+            }
         }
 
         return $this->render('main/utilisateur/ajout/ajoutUtilisateur.html.twig', [
@@ -174,6 +187,44 @@ class UtilisateurController extends baseController
             'nomUtilisateur' => $this->sessionUtilisateur,
             'form' => $form->createView()
         ]);
+    }
+
+    #[Route('/voirUtilisateur/{id}', name: 'app_voir_utilisateur', methods: ['GET','POST'])]
+    public function voirUtilisateur(int $id,
+        UtilisateurRepository $utilisateurRepository,
+        ClientRepository $clientRepository,
+        ArtisanRepository $artisanRepository,
+        AdministrateurRepository $adminRepository){
+        $utilisateur = $utilisateurRepository->find($id);
+
+        return $this->render('main/utilisateur/voir.html.twig', [
+            'nomUtilisateur' => $this->sessionUtilisateur,
+            'id' => $id
+        ]);
+    }
+
+    #[Route('/activerUtilisateur/{id}', name: 'app_activer_utilisateur', methods: ['GET','POST'])]
+    public function activerUtilisateur(int $id, ManagerRegistry $doctrine){
+        
+        $entityManager = $doctrine->getManager();
+        $utilisateur = $entityManager->getRepository(Utilisateur::class)->find($id);
+
+        $utilisateur->setStatusCompte(1);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_liste_utilisateur');
+    }
+
+    #[Route('/desactiverUtilisateur/{id}', name: 'app_desactiver_utilisateur', methods: ['GET','POST'])]
+    public function desactiverUtilisateur(int $id, ManagerRegistry $doctrine){
+        
+        $entityManager = $doctrine->getManager();
+        $utilisateur = $entityManager->getRepository(Utilisateur::class)->find($id);
+
+        $utilisateur->setStatusCompte(0);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_liste_utilisateur');
     }
 
 }

@@ -39,9 +39,13 @@
             {% else %}
             <td class="text-success">Actif</td>
             {% endif %}
-            <td><button class="btn btn-primary">Visualiser</button></td>
-            <td><button class="btn btn-secondary">Modifier</button></td>
-            <td><button class="btn btn-warning">Désactiver</button></td>
+            <td><a href="/voirUtilisateur/{{utilisateur.id}}"><button class="btn btn-primary">Visualiser</button></a></td>
+            <td><a href="/modifierUtilisateur/{{utilisateur.id}}"><button class="btn btn-secondary">Modifier</button></a></td>
+            {% if(utilisateur.statusCompte == 0) %}
+            <td><a href="/activerUtilisateur/{{utilisateur.id}}"><button class="btn btn-warning">Activer</button></a></td>
+            {% else %}
+            <td><a href="/desactiverUtilisateur/{{utilisateur.id}}"><button class="btn btn-danger">Désactiver</button></a></td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>

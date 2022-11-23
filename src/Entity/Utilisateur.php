@@ -66,7 +66,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $artisans;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $statusCompte = 1;
+    private ?int $statusCompte = 0;
 
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable();

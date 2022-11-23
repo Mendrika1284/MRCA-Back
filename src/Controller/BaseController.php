@@ -20,8 +20,8 @@ class BaseController extends AbstractController
         $session = $this->requestStack->getSession();
         $this->sessionUtilisateur = $session->get('nomUtilisateur');
         $this->idUtilisateur = $session->get('idUtilisateur');
-        if(empty( $this->idUtilisateur = $session->get('idUtilisateur'))){
-            return $this->redirectToRoute('app.login');
+        if(empty($this->idUtilisateur)){
+            $this->redirectToRoute('security.login');
         }
     }
 }

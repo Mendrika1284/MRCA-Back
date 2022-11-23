@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Utilisateur;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,8 +34,14 @@ class BackController extends BaseController
     }
 
     #[Route('/logout', name: 'security.logout')]
-    public function logout(): Response
-    {}    
+    public function logout(ManagerRegistry $doctrine): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $utilisateur = $entityManager->getRepository(Utilisateur::class)->find($this->idUtilisateur);
+
+        $utilisateur->setStatusCompte(0);
+        $entityManager->flush();
+    }    
 
     #[Route('/', name: 'app_accueil')]
     public function index(UserInterface $user, Request $request): Response
@@ -44,6 +52,7 @@ class BackController extends BaseController
             $session = $this->requestStack->getSession();
             $session->set('nomUtilisateur', $userName);
             $session->set('idUtilisateur', $userId);
+
             return $this->render('main/index.html.twig', [
                 'controller_name' => 'BackController',
                 'nomUtilisateur' => $session->get('nomUtilisateur'),
