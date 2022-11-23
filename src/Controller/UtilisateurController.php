@@ -6,7 +6,9 @@ use App\Entity\Client;
 use App\Entity\Artisan;
 use App\Entity\Entreprise;
 use App\Entity\Utilisateur;
+use App\Form\AjoutAdminType;
 use App\Form\AjoutClientType;
+use App\Entity\Administrateur;
 use App\Form\AjoutArtisanType;
 use App\Form\AjoutEntrepriseType;
 use App\Form\AjoutUtilisateurType;
@@ -142,6 +144,33 @@ class UtilisateurController extends baseController
         }
 
         return $this->render('main/utilisateur/ajout/ajoutArtisan.html.twig', [
+            'nomUtilisateur' => $this->sessionUtilisateur,
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/ajout_admin', name: 'app_ajout_admin', methods: ['GET','POST'])]
+    public function ajoutAdministrateur(Request $request, EntityManagerInterface $manager){
+        $admin = new Administrateur();
+        $form = $this->createForm(AjoutAdminType::class, $admin);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $admin = $form->getData();
+
+            $this->addFlash(
+                'success',
+                "Le compte Administrateur a été enregistrer"
+            );
+
+            $manager->persist($admin);
+            $manager->flush();
+
+            return $this->redirectToRoute('app_ajout_admin');
+        }
+
+        return $this->render('main/utilisateur/ajout/ajoutAdmin.html.twig', [
             'nomUtilisateur' => $this->sessionUtilisateur,
             'form' => $form->createView()
         ]);
