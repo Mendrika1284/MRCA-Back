@@ -120,7 +120,7 @@ class UtilisateurController extends baseController
     }
 
 
-    #[Route('/ajout_professionnel', name: 'app_ajout_professionnel', methods: ['GET','POST'])]
+    #[Route('/ajout_professionnel', name: 'app_ajout_artisan', methods: ['GET','POST'])]
     public function ajoutProfessionnel(Request $request, EntityManagerInterface $manager){
         $artisan = new Artisan();
         $form = $this->createForm(AjoutArtisanType::class, $artisan);
