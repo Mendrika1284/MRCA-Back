@@ -100,7 +100,7 @@ class UtilisateurController extends baseController
             $manager->persist($client);
             $manager->flush();
 
-            return $this->redirectToRoute('app_ajout_client');
+            return $this->redirectToRoute('app_ajout_utilisateur');
         }
 
         return $this->render('main/utilisateur/ajout/ajoutClient.html.twig', [
@@ -127,7 +127,7 @@ class UtilisateurController extends baseController
             $manager->persist($entreprise);
             $manager->flush();
 
-            return $this->redirectToRoute('app_ajout_entreprise');
+            return $this->redirectToRoute('app_ajout_utilisateur');
         }
 
         return $this->render('main/utilisateur/ajout/ajoutEntreprise.html.twig', [
@@ -155,7 +155,7 @@ class UtilisateurController extends baseController
             $manager->persist($artisan);
             $manager->flush();
 
-            return $this->redirectToRoute('app_ajout_artisan');
+            return $this->redirectToRoute('app_ajout_utilisateur');
         }
 
         return $this->render('main/utilisateur/ajout/ajoutArtisan.html.twig', [
@@ -182,7 +182,7 @@ class UtilisateurController extends baseController
             $manager->persist($admin);
             $manager->flush();
 
-            return $this->redirectToRoute('app_ajout_admin');
+            return $this->redirectToRoute('app_ajout_utilisateur');
         }
 
         return $this->render('main/utilisateur/ajout/ajoutAdmin.html.twig', [

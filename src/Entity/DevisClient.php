@@ -50,6 +50,9 @@ class DevisClient
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column]
+    private ?int $etat = null;
+
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable();
     }
@@ -187,6 +190,18 @@ class DevisClient
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getEtat(): ?int
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(int $etat): self
+    {
+        $this->etat = $etat;
 
         return $this;
     }

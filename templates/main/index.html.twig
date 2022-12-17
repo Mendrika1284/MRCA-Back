@@ -3,5 +3,49 @@
 {% block title %}Menu{% endblock %}
 
 {% block body %}
-    <h1>Hello World {{ idUtilisateur }}</h1>
+<table class="table table-responsive-sm">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Date demande</th>
+            <th scope="col">Type travaux</th>
+            <th scope="col">Etat</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for devis in devisClient %}
+        <tr>
+            <th scope="row">{{ devis.idDevis }}</th>
+            <td>{{ devis.dateCreation }}</td>
+            <td>{{ devis.nomTypeTravaux }}</td>
+            {% if(devis.etatDevis == 0) %}
+            <td class="text-primary">A assigner</td>
+            {% elseif(devis.etatDevis == 1) %}
+            <td class="text-info">A préparer</td>
+            {% elseif(devis.etatDevis == 2) %}
+            <td class="text-warning">En attente validation</td>
+            {% elseif(devis.etatDevis == 3) %}
+            <td class="text-success">Validé</td>
+            {% elseif(devis.etatDevis == 4) %}
+            <td class="text-danger">Refusé</td>
+            {% endif %}
+            <td>
+                <div class="btn-group dropend">
+                    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Action
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="/assignerDevis/{{devis.idDevis}}"><i class="bi bi-reply"></i>Assigner</a></li>
+                        <li><a class="dropdown-item" href="/visualiserDevis/{{devis.idDevis}}"><i class="bi bi-link"></i>Visualiser</a></li>
+                        <li><a class="dropdown-item" href="/telechargerDevis/{{devis.idDevis}}"><i class="bi bi-download"></i>Télecharger</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="navigation d-flex justify-content-center">
+    {{ knp_pagination_render(pagination) }}
+</div>
 {% endblock %}

@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Utilisateur;
+use App\Controller\BaseController;
+use App\Repository\DevisClientRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -44,7 +47,7 @@ class BackController extends BaseController
     }    
 
     #[Route('/', name: 'app_accueil')]
-    public function index(UserInterface $user, Request $request): Response
+    public function index(UserInterface $user, Request $request, ManagerRegistry $doctrine, PaginatorInterface $paginator,): Response
     {
         if(!empty($user) && $user->getRoles()[0] == "ROLE_ADMIN"){
             $userName = $user->getNom();
@@ -53,10 +56,36 @@ class BackController extends BaseController
             $session->set('nomUtilisateur', $userName);
             $session->set('idUtilisateur', $userId);
 
+            $entityManager = $doctrine->getManager();
+            $conn = $entityManager->getConnection();
+
+            $sql = '
+                    SELECT type_travaux.id as idTypeTravaux,
+                           type_travaux.nom as nomTypeTravaux, 
+                           devis_client.id as idDevis,
+                           devis_client.created_at as dateCreation,
+                           devis_client.etat as etatDevis
+                    FROM devis_client
+                    JOIN type_travaux ON type_travaux.id = devis_client.id_type_travaux_id
+                    ORDER BY dateCreation DESC
+                ';
+            $stmt = $conn->prepare($sql);
+            $resultSet = $stmt->executeQuery();
+
+            $devisClient = $resultSet->fetchAllAssociative();
+
+            $pagination = $paginator->paginate(
+                $devisClient,
+                $request->query->getInt('page', 1),
+                10
+            );
+
             return $this->render('main/index.html.twig', [
                 'controller_name' => 'BackController',
                 'nomUtilisateur' => $session->get('nomUtilisateur'),
-                'idUtilisateur' =>$session->get('idUtilisateur')
+                'idUtilisateur' =>$session->get('idUtilisateur'),
+                'devisClient' => $pagination,
+                'pagination' => $pagination
             ]);
         }else{
             $this->addFlash(
