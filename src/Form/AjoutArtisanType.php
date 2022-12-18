@@ -67,6 +67,30 @@ class AjoutArtisanType extends AbstractType
                 ],
                 'required' => false
                 ])
+            ->add('positionX', TextType::class, [
+                    'attr' => [
+                        'class' => 'form-control',
+                        'id' => 'positionX',
+                        'readOnly' => 'true',
+                        'data-bs-toggle' => 'modal',
+                        'data-bs-target' => '#exampleModal'
+                    ],
+                    'label' => 'Position X',
+                    'label_attr' => [
+                        'class' => 'form-label mt-4'
+                    ],
+                ])
+            ->add('positionY', TextType::class, [
+                    'attr' => [
+                        'class' => 'form-control',
+                        'id' => 'positionY',
+                        'readOnly' => 'true'
+                    ],
+                    'label' => 'Position Y',
+                    'label_attr' => [
+                        'class' => 'form-label mt-4'
+                    ],
+                ])
             ->add('idCategorieMetier',EntityType::class, [
                 'class' => CategorieMetier::class,
                 'choice_label' => 'nom_metier',

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ArtisanRepository;
@@ -50,6 +51,12 @@ class Artisan
     #[ORM\ManyToOne(inversedBy: 'artisans')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CategorieMetier $idCategorieMetier = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 20, scale: 18)]
+    private ?string $positionX = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 20, scale: 18)]
+    private ?string $positionY = null;
 
     public function getId(): ?int
     {
@@ -184,6 +191,30 @@ class Artisan
     public function setIdCategorieMetier(?CategorieMetier $idCategorieMetier): self
     {
         $this->idCategorieMetier = $idCategorieMetier;
+
+        return $this;
+    }
+
+    public function getPositionX(): ?string
+    {
+        return $this->positionX;
+    }
+
+    public function setPositionX(string $positionX): self
+    {
+        $this->positionX = $positionX;
+
+        return $this;
+    }
+
+    public function getPositionY(): ?string
+    {
+        return $this->positionY;
+    }
+
+    public function setPositionY(string $positionY): self
+    {
+        $this->positionY = $positionY;
 
         return $this;
     }

@@ -37,7 +37,7 @@ class UtilisateurController extends baseController
         $pagination = $paginator->paginate(
             $utilisateur,
             $request->query->getInt('page', 1),
-            10
+            5
         );
 
         return $this->render('main/utilisateur/liste.html.twig', [
