@@ -20,15 +20,6 @@
             <td>{{ devis.nomTypeTravaux }}</td>
             {% if(devis.etatDevis == 0) %}
             <td class="text-primary">A assigner</td>
-            {% elseif(devis.etatDevis == 1) %}
-            <td class="text-info">A préparer</td>
-            {% elseif(devis.etatDevis == 2) %}
-            <td class="text-warning">En attente validation</td>
-            {% elseif(devis.etatDevis == 3) %}
-            <td class="text-success">Validé</td>
-            {% elseif(devis.etatDevis == 4) %}
-            <td class="text-danger">Refusé</td>
-            {% endif %}
             <td>
                 <div class="btn-group dropend">
                     <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -41,6 +32,59 @@
                     </ul>
                 </div>
             </td>
+            {% elseif(devis.etatDevis == 1) %}
+            <td class="text-info">A préparer</td>
+            <td>
+                <div class="btn-group dropend">
+                    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Action
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="/visualiserDevis/{{devis.idDevis}}"><i class="bi bi-link"></i>Visualiser</a></li>
+                        <li><a class="dropdown-item" href="/telechargerDevis/{{devis.idDevis}}"><i class="bi bi-download"></i>Télecharger</a></li>
+                    </ul>
+                </div>
+            </td>
+            {% elseif(devis.etatDevis == 2) %}
+            <td class="text-warning">En attente validation</td>
+            <td>
+                <div class="btn-group dropend">
+                    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Action
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="/visualiserDevis/{{devis.idDevis}}"><i class="bi bi-link"></i>Visualiser</a></li>
+                        <li><a class="dropdown-item" href="/telechargerDevis/{{devis.idDevis}}"><i class="bi bi-download"></i>Télecharger</a></li>
+                    </ul>
+                </div>
+            </td>
+            {% elseif(devis.etatDevis == 3) %}
+            <td class="text-success">Validé</td>
+            <td>
+                <div class="btn-group dropend">
+                    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Action
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="/visualiserDevis/{{devis.idDevis}}"><i class="bi bi-link"></i>Visualiser</a></li>
+                        <li><a class="dropdown-item" href="/telechargerDevis/{{devis.idDevis}}"><i class="bi bi-download"></i>Télecharger</a></li>
+                    </ul>
+                </div>
+            </td>
+            {% elseif(devis.etatDevis == 4) %}
+            <td class="text-danger">Refusé</td>
+            <td>
+                <div class="btn-group dropend">
+                    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Action
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="/visualiserDevis/{{devis.idDevis}}"><i class="bi bi-link"></i>Visualiser</a></li>
+                        <li><a class="dropdown-item" href="/telechargerDevis/{{devis.idDevis}}"><i class="bi bi-download"></i>Télecharger</a></li>
+                    </ul>
+                </div>
+            </td>
+            {% endif %}
         </tr>
     {% endfor %}
     </tbody>

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
@@ -57,6 +59,17 @@ class Artisan
 
     #[ORM\Column(type: Types::DECIMAL, precision: 20, scale: 18)]
     private ?string $positionY = null;
+
+    #[ORM\OneToMany(mappedBy: 'idArtisan', targetEntity: DevisClient::class)]
+    private Collection $devisClients;
+
+    #[ORM\Column]
+    private ?int $estOccupe = null;
+
+    public function __construct()
+    {
+        $this->devisClients = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -215,6 +228,48 @@ class Artisan
     public function setPositionY(string $positionY): self
     {
         $this->positionY = $positionY;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DevisClient>
+     */
+    public function getDevisClients(): Collection
+    {
+        return $this->devisClients;
+    }
+
+    public function addDevisClient(DevisClient $devisClient): self
+    {
+        if (!$this->devisClients->contains($devisClient)) {
+            $this->devisClients->add($devisClient);
+            $devisClient->setIdArtisan($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDevisClient(DevisClient $devisClient): self
+    {
+        if ($this->devisClients->removeElement($devisClient)) {
+            // set the owning side to null (unless already changed)
+            if ($devisClient->getIdArtisan() === $this) {
+                $devisClient->setIdArtisan(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getEstOccupe(): ?int
+    {
+        return $this->estOccupe;
+    }
+
+    public function setEstOccupe(int $estOccupe): self
+    {
+        $this->estOccupe = $estOccupe;
 
         return $this;
     }

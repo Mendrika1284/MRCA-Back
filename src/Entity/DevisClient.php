@@ -53,6 +53,9 @@ class DevisClient
     #[ORM\Column]
     private ?int $etat = null;
 
+    #[ORM\ManyToOne(inversedBy: 'devisClients')]
+    private ?artisan $idArtisan = null;
+
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable();
     }
@@ -202,6 +205,18 @@ class DevisClient
     public function setEtat(int $etat): self
     {
         $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getIdArtisan(): ?artisan
+    {
+        return $this->idArtisan;
+    }
+
+    public function setIdArtisan(?artisan $idArtisan): self
+    {
+        $this->idArtisan = $idArtisan;
 
         return $this;
     }
