@@ -3,3 +3,12 @@ controllers:
     type: attribute
 api_login_check:
     path: /api/login_check
+
+liste_devis_par_artisan:
+    path: /listeDevisParArtisan
+    methods: [GET]
+    controller: App\Controller\API\DevisClientApiController::listeDevisParArtisan
+connexion_utilisateur:
+    path: /connexion_utilisateur
+    methods: [POST]
+    controller: App\Controller\API\Utilisateur::connexionUtilisateur
