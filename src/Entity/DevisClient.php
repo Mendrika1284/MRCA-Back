@@ -2,11 +2,16 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\DevisClientRepository;
+use App\Entity\Artisan;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use App\Repository\DevisClientRepository;
+use App\Controller\DevisClientApiController;
 
+// Eto za zao
 #[ApiResource]
 #[ORM\Entity(repositoryClass: DevisClientRepository::class)]
 class DevisClient
@@ -54,7 +59,7 @@ class DevisClient
     private ?int $etat = null;
 
     #[ORM\ManyToOne(inversedBy: 'devisClients')]
-    private ?artisan $idArtisan = null;
+    private ?Artisan $idArtisan = null;
 
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable();
@@ -209,12 +214,12 @@ class DevisClient
         return $this;
     }
 
-    public function getIdArtisan(): ?artisan
+    public function getIdArtisan(): ?Artisan
     {
         return $this->idArtisan;
     }
 
-    public function setIdArtisan(?artisan $idArtisan): self
+    public function setIdArtisan(?Artisan $idArtisan): self
     {
         $this->idArtisan = $idArtisan;
 

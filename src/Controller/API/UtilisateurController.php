@@ -22,7 +22,7 @@ class UtilisateurController extends AbstractController
         $conn = $entityManager->getConnection();
 
         $sqlForConnexion = '
-                SELECT id,email,password,roles,status_compte FROM utilisateur WHERE email = :email AND password = :password LIMIT 1
+                SELECT id,nom,prenom,email,password,roles,status_compte FROM utilisateur WHERE email = :email AND password = :password LIMIT 1
             ';
         $stmtForClient = $conn->prepare($sqlForConnexion);
         $resultSetForClient = $stmtForClient->executeQuery(['email'=> $email, 'password' => $password]);
