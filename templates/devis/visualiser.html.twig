@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Voir Devis{% endblock %}
+
+{% block stylesheets %}
+<style>
+#map1{
+	height:400px;
+	width: 470px;
+}
+#map2{
+	height:400px;
+	width: 470px;
+}
+.table-responsive {
+    max-height:300px;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<center><h1 class="mt-4 mb-4">Détail devis N°{{ devisClient[0].idDevis }}</h1></center>
+
+<div class="col d-flex justify-content-center">
+<div class="card" style="width: 80rem;">
+  <div class="card-body">
+    <h5 class="card-title">Travaux à faire: {{devisClient[0].nomTypeTravaux}}</h5>
+    <h6 class="card-text">Détail: {{devisClient[0].detailDevis}}</h6>
+    <h6 class="card-text">Lieu du travail: <a href="#" class="card-link" data-bs-toggle='modal' data-bs-target='#mapClient' >Voir sur google maps</a></h6>
+	<h6 class="card-text mb-4">Date demande: {{devisClient[0].dateCreation}}</h6>
+  </div>
+</div>
+</div>
+
+
+
+<div class="modal fade" id="mapClient" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLabel">{{devisClient[0].devisPositionX}},{{devisClient[0].devisPositionY}}</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="map1"></div> 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://maps.google.com/maps/api/js?key=AIzaSyB6pMvczInWTWXzYwfMbbHvM0MUtvXLALc" type="text/javascript"></script>
+		<script async type="text/javascript">
+			// Fonction d'initialisation de la carte 
+			function initMap1() {
+				var latitude = {{devisClient[0].devisPositionX}};
+				var longitude = {{devisClient[0].devisPositionY}};
+				var myLatlng = new google.maps.LatLng(latitude,longitude);
+				var mapOptions = {
+				zoom: 16,
+				center: myLatlng,
+				mapTypeId: 'hybrid'
+				}
+				var map = new google.maps.Map(document.getElementById("map1"), mapOptions);
+
+				var marker = new google.maps.Marker({
+					position: myLatlng,
+					title:"Ici"
+				});
+
+				marker.setMap(map);
+			}
+
+			window.onload = function(){
+				initMap1();
+			};
+		</script>
+{% endblock %}
