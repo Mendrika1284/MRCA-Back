@@ -40,4 +40,50 @@ class DevisClientApiController extends AbstractController
 
         return new JsonResponse(['devisArtisan' => $devisArtisan]);
     }
+
+    /**
+     * @Route("/visualiserDevisArtisan/{id}", methods={"GET"})
+     */
+    public function visualiserDevisArtisan(int $id, ManagerRegistry $doctrine)
+    {
+        $entityManager = $doctrine->getManager();
+        $conn = $entityManager->getConnection();
+
+        $sqlForDevisClient = '
+                SELECT type_travaux.id as idTypeTravaux,
+                       type_travaux.nom as nomTypeTravaux, 
+                       devis_client.id as idDevis,
+                       devis_client.created_at as dateCreation,
+                       devis_client.position_x as devisPositionX,
+                       devis_client.position_y as devisPositionY,
+                       devis_client.info_supplementaire as detailDevis,
+                       devis_client.etat as etatDevis,
+                       devis_client.email as emailClient,
+                       devis_client.montant as montant
+                FROM devis_client
+                JOIN type_travaux ON type_travaux.id = devis_client.id_type_travaux_id
+                JOIN artisan ON devis_client.id_artisan_id = artisan.id 
+                WHERE devis_client.id = :idDevis 
+            ';
+        $stmtForDevisClient = $conn->prepare($sqlForDevisClient);
+        $resultSetForDevisClient = $stmtForDevisClient->executeQuery(['idDevis'=> $id]);
+        $detailDevis = $resultSetForDevisClient->fetchAllAssociative();
+
+        $sqlForDetailUtilisateur = '
+                SELECT utilisateur.id as idUtilisateur,
+                       utilisateur.nom as nomUtilisateur,
+                       utilisateur.prenom as prenomUtilisateur,
+                       utilisateur.contact as contactUtilisateur
+                FROM utilisateur
+                WHERE utilisateur.email = :email 
+            ';
+        $stmtForDetailUtilisateur = $conn->prepare($sqlForDetailUtilisateur);
+        $resultSetForDetailUtilisateur = $stmtForDetailUtilisateur->executeQuery(['email'=> $detailDevis[0]['emailClient']]);
+
+        $detailUtilisateur = $resultSetForDetailUtilisateur->fetchAllAssociative();
+
+        return new JsonResponse(['detailDevis' => $detailDevis,
+                                 'detailUtilisateur' => $detailUtilisateur   
+        ]);
+    }
 }

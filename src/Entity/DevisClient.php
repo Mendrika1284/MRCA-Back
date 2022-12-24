@@ -61,6 +61,9 @@ class DevisClient
     #[ORM\ManyToOne(inversedBy: 'devisClients')]
     private ?Artisan $idArtisan = null;
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $montant = null;
+
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable();
     }
@@ -222,6 +225,18 @@ class DevisClient
     public function setIdArtisan(?Artisan $idArtisan): self
     {
         $this->idArtisan = $idArtisan;
+
+        return $this;
+    }
+
+    public function getMontant(): ?string
+    {
+        return $this->montant;
+    }
+
+    public function setMontant(string $montant): self
+    {
+        $this->montant = $montant;
 
         return $this;
     }
