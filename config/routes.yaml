@@ -12,6 +12,14 @@ visualiser_devis_artisan:
     path: /visualiserDevisArtisan
     methods: [GET]
     controller: App\Controller\API\DevisClientApiController::visualiserDevisArtisan
+visualiser_devis_artisan_a_preparer:
+    path: /visualiserDevisArtisanApreparer
+    methods: [GET]
+    controller: App\Controller\API\DevisClientApiController::visualiserDevisArtisanApreparer
+preparer_devis:
+    path: /preparerDevis/{id}/{montant}
+    methods: [PATCH]
+    controller: App\Controller\API\DevisClientApiController::preparerDevis
 connexion_utilisateur:
     path: /connexion_utilisateur
     methods: [POST]
