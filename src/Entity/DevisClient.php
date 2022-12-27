@@ -64,6 +64,9 @@ class DevisClient
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $montant = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $choixTypeTravaux = null;
+
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable();
     }
@@ -237,6 +240,18 @@ class DevisClient
     public function setMontant(string $montant): self
     {
         $this->montant = $montant;
+
+        return $this;
+    }
+
+    public function getChoixTypeTravaux(): ?string
+    {
+        return $this->choixTypeTravaux;
+    }
+
+    public function setChoixTypeTravaux(string $choixTypeTravaux): self
+    {
+        $this->choixTypeTravaux = $choixTypeTravaux;
 
         return $this;
     }
