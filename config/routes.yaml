@@ -4,6 +4,7 @@ controllers:
 api_login_check:
     path: /api/login_check
 
+# Artisan
 liste_devis_par_artisan:
     path: /listeDevisParArtisan
     methods: [GET]
@@ -20,7 +21,12 @@ preparer_devis:
     path: /preparerDevis/{id}/{montant}
     methods: [PATCH]
     controller: App\Controller\API\DevisClientApiController::preparerDevis
+ # Utilisateur   
 connexion_utilisateur:
     path: /connexion_utilisateur
     methods: [POST]
     controller: App\Controller\API\Utilisateur::connexionUtilisateur
+reception_devis:
+    path: /receptionDevis/{email}
+    methods: [PATCH]
+    controller: App\Controller\API\Utilisateur::receptionDevis

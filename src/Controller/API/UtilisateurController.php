@@ -35,4 +35,38 @@ class UtilisateurController extends AbstractController
             return new JsonResponse(['connexionClient' => $connexionClient, 'token' => $token]);
         }
     }
+
+    /**
+     * @Route("/receptionDevis/{email}", methods={"GET"})
+     */
+    public function receptionDevis(ManagerRegistry $doctrine, String $email)
+    {
+        $entityManager = $doctrine->getManager();
+        $conn = $entityManager->getConnection();
+
+        $sqlForConnexion = '
+                    SELECT type_travaux.id as idTypeTravaux,
+                            type_travaux.nom as nomTypeTravaux, 
+                            devis_client.id as idDevis,
+                            devis_client.created_at as dateCreation,
+                            devis_client.position_x as devisPositionX,
+                            devis_client.position_y as devisPositionY,
+                            devis_client.info_supplementaire as detailDevis,
+                            devis_client.etat as etatDevis,
+                            devis_client.email as emailClient,
+                            devis_client.montant as montant,
+                            devis_client.date_debut as dateDebut,
+                            devis_client.date_fin as dateFin,
+                            devis_client.choix_type_travaux as choixTypeTravaux
+                    FROM devis_client
+                    JOIN type_travaux ON type_travaux.id = devis_client.id_type_travaux_id
+                    WHERE devis_client.email = :email
+                    GROUP BY idDevis DESC
+            ';
+        $stmtForDevis = $conn->prepare($sqlForConnexion);
+        $resultSetForDevis = $stmtForDevis->executeQuery(['email'=> $email]);
+
+        $devisClient = $resultSetForDevis->fetchAllAssociative();
+        return new JsonResponse(['devisClient' => $devisClient]);
+    }
 }
