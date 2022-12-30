@@ -69,4 +69,79 @@ class UtilisateurController extends AbstractController
         $devisClient = $resultSetForDevis->fetchAllAssociative();
         return new JsonResponse(['devisClient' => $devisClient]);
     }
+
+    /**
+     * @Route("/visualiserDevisClient/{id}", methods={"GET"})
+     */
+    public function visualiserDevisClient(int $id, ManagerRegistry $doctrine)
+    {
+        $entityManager = $doctrine->getManager();
+        $conn = $entityManager->getConnection();
+
+        $sqlForDevisClient = '
+                SELECT type_travaux.id as idTypeTravaux,
+                       type_travaux.nom as nomTypeTravaux,
+                       devis_client.id as idDevis,
+                       devis_client.created_at as dateCreation,
+                       devis_client.position_x as devisPositionX,
+                       devis_client.position_y as devisPositionY,
+                       devis_client.info_supplementaire as detailDevis,
+                       devis_client.etat as etatDevis,
+                       devis_client.choix_type_travaux as choixTypeTravaux,
+                       devis_client.email as emailClient,
+                       devis_client.montant as montant,
+                       devis_client.date_debut as dateDebut,
+                       devis_client.date_fin as dateFin,
+                       artisan.id as idArtisan
+                FROM devis_client
+                JOIN type_travaux ON type_travaux.id = devis_client.id_type_travaux_id
+                JOIN artisan ON devis_client.id_artisan_id = artisan.id 
+                WHERE devis_client.id = :idDevis 
+            ';
+        $stmtForDevisClient = $conn->prepare($sqlForDevisClient);
+        $resultSetForDevisClient = $stmtForDevisClient->executeQuery(['idDevis'=> $id]);
+        $detailDevis = $resultSetForDevisClient->fetchAllAssociative();
+        $error = error_get_last();
+
+
+        $sqlForDetailClient = '
+                SELECT utilisateur.id as idUtilisateur,
+                       utilisateur.nom as nomUtilisateur,
+                       utilisateur.prenom as prenomUtilisateur,
+                       utilisateur.contact as contactUtilisateur
+                FROM utilisateur
+                WHERE utilisateur.email = :email 
+            ';
+        $stmtForDetailClient = $conn->prepare($sqlForDetailClient);
+        $resultSetForDetailClient = $stmtForDetailClient->executeQuery(['email'=> $detailDevis[0]['emailClient']]);
+        $detailClient = $resultSetForDetailClient->fetchAllAssociative();
+        $sqlForDetailArtisan = '
+                SELECT utilisateur.id as idArtisan,
+                       utilisateur.nom as nomArtisan,
+                       utilisateur.prenom as prenomArtisan,
+                       utilisateur.contact as contactArtisan,
+                       utilisateur.email as emailArtisan,
+                       artisan.civilite as civiliteArtisan,
+                       artisan.status_juridique as statusJuridiqueArtisan,
+                       artisan.siret as siretArtisan,
+                       artisan.tva as tvaArtisan,
+                       artisan.kbis as kbisArtisan,
+                       artisan.iban as ibanArtisan,
+                       artisan.bic as bicArtisan,
+                       artisan.position_x as positionXArtisan,
+                       artisan.position_y as positionYArtisan
+                FROM utilisateur
+                JOIN artisan on artisan.id_utilisateur_id = utilisateur.id
+                WHERE artisan.id = :id 
+            ';
+        $stmtForDetailArtisan = $conn->prepare($sqlForDetailArtisan);
+        $resultSetForDetailArtisan = $stmtForDetailArtisan->executeQuery(['id'=> $detailDevis[0]['idArtisan']]);
+        $detailArtisan = $resultSetForDetailArtisan->fetchAllAssociative();
+
+        return new JsonResponse(['detailDevis' => $detailDevis,
+                                 'detailClient' => $detailClient,
+                                 'detailArtisan' => $detailArtisan
+        ]);
+    }
+
 }
