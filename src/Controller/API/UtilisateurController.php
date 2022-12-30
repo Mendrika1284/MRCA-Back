@@ -2,6 +2,7 @@
 
 namespace App\Controller\API;
 
+use App\Entity\DevisClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -142,6 +143,48 @@ class UtilisateurController extends AbstractController
                                  'detailClient' => $detailClient,
                                  'detailArtisan' => $detailArtisan
         ]);
+    }
+
+    /**
+     * @Route("/validerDevis/{id}", methods={"PATCH"})
+     */
+    public function validerDevis(int $id, Request $request, ManagerRegistry $doctrine)
+    {
+        $devisClient = $doctrine->getRepository(DevisClient::class)->find($id);
+
+        if (!$devisClient) {
+            throw new NotFoundHttpException('Devis client non trouvé');
+        }
+
+        // Etat validé
+        $devisClient->setEtat(3);
+
+        $em = $doctrine->getManager();
+        $em->persist($devisClient);
+        $em->flush();
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @Route("/refuserDevis/{id}", methods={"PATCH"})
+     */
+    public function refuserDevis(int $id, Request $request, ManagerRegistry $doctrine)
+    {
+        $devisClient = $doctrine->getRepository(DevisClient::class)->find($id);
+
+        if (!$devisClient) {
+            throw new NotFoundHttpException('Devis client non trouvé');
+        }
+
+        // Etat validé
+        $devisClient->setEtat(4);
+
+        $em = $doctrine->getManager();
+        $em->persist($devisClient);
+        $em->flush();
+
+        return new JsonResponse(null, 204);
     }
 
 }

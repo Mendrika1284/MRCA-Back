@@ -34,3 +34,11 @@ visualiser_devis_client:
     path: /visualiserDevisClient/{id}
     methods: [GET]
     controller: App\Controller\API\Utilisateur::visualiserDevisClient
+valider_devis_client:
+    path: /validerDevis/{id}
+    methods: [PATCH]
+    controller: App\Controller\API\Utilisateur::validerDevis
+refuser_devis_client:
+    path: /refuserDevis/{id}
+    methods: [PATCH]
+    controller: App\Controller\API\Utilisateur::refuserDevis
