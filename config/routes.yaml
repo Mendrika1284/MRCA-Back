@@ -42,3 +42,7 @@ refuser_devis_client:
     path: /refuserDevis/{id}
     methods: [PATCH]
     controller: App\Controller\API\Utilisateur::refuserDevis
+supprimer_devis_client:
+    path: /supprimerDevis/{id}
+    methods: [DELETE]
+    controller: App\Controller\API\Utilisateur::supprimerDevis

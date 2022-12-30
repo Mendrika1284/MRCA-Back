@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class UtilisateurController extends AbstractController
@@ -182,6 +183,25 @@ class UtilisateurController extends AbstractController
 
         $em = $doctrine->getManager();
         $em->persist($devisClient);
+        $em->flush();
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @Route("/supprimerDevis/{id}", methods={"DELETE"})
+     */
+    public function supprimerDevis(int $id, Request $request, ManagerRegistry $doctrine)
+    {
+        $devisClient = $doctrine->getRepository(DevisClient::class)->find($id);
+
+        if (!$devisClient) {
+            throw new NotFoundHttpException('Devis client non trouvé');
+        }
+
+
+        $em = $doctrine->getManager();
+        $em->remove($devisClient);
         $em->flush();
 
         return new JsonResponse(null, 204);
