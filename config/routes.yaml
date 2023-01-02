@@ -51,11 +51,11 @@ reception_devis_par_id:
     path: /receptionDevisParId/{id}
     methods: [GET]
     controller: App\Controller\API\UtilisateurController::receptionDevisParId
-demande_intervention:
-    path: /demandeIntervention
-    methods: [POST]
-    controller: App\Controller\API\UtilisateurController::demandeIntervention
 set_demande_devis_etat:
     path: /setDemandeDevisEtat/{id}
     methods: [PATCH]
     controller: App\Controller\API\UtilisateurController::setDemandeDevisEtat
+liste_intervention_client:
+    path: /listeInterventionClient/{id}
+    methods: [GET]
+    controller: App\Controller\API\UtilisateurController::listeInterventionClient

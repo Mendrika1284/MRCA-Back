@@ -34,6 +34,19 @@ class Intervention
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $idUtilisateur = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?int $etat = null;
+
+    #[ORM\Column]
+    private ?int $etatPaiement = null;
+
+    public function __construct(){
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -95,6 +108,42 @@ class Intervention
     public function setIdUtilisateur(?Utilisateur $idUtilisateur): self
     {
         $this->idUtilisateur = $idUtilisateur;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getEtat(): ?int
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(int $etat): self
+    {
+        $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getEtatPaiement(): ?int
+    {
+        return $this->etatPaiement;
+    }
+
+    public function setEtatPaiement(int $etatPaiement): self
+    {
+        $this->etatPaiement = $etatPaiement;
 
         return $this;
     }

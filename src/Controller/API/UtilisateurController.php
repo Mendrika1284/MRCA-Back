@@ -286,27 +286,6 @@ class UtilisateurController extends AbstractController
     }
 
     /**
-     * @Route("/demandeIntervention", methods={"POST"})
-     */
-    public function demandeIntervention(Request $request)
-    {
-        $data = json_decode($request->getContent(), true);
-        dd($data);
-        $intervention = new Intervention();
-        $intervention->setIdDevisClient($data['idDevisTravaux']);
-        $intervention->setIdArtisan($data['idArtisan']);
-        $intervention->setDescription($data['description']);
-        $intervention->setDistanceClientArtisan($data['distanceClientArtisan']);
-        $intervention->setIdUtilisateur($data['idClient']);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($employer);
-        $em->flush();
-
-        return new JsonResponse(['status' => 'Employer created!']);
-    }
-
-    /**
      * @Route("/setDemandeDevisEtat/{id}", methods={"PATCH"})
      */
     public function setDemandeDevisEtat(int $id, Request $request, ManagerRegistry $doctrine)
@@ -325,6 +304,33 @@ class UtilisateurController extends AbstractController
         $em->flush();
 
         return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @Route("/listeInterventionClient/{id}", methods={"GET"})
+     */
+    public function listeInterventionClient(ManagerRegistry $doctrine, int $id)
+    {
+        $interventionRepository = $doctrine->getRepository(Intervention::class);
+
+        $interventions = $interventionRepository->findBy(['idUtilisateur' => $id]);
+
+        $results = [];
+        foreach ($interventions as $intervention) {
+            $artisan = $intervention->getIdArtisan();
+
+            $results[] = [
+                'idDevis' => $intervention->getIdDevisClient()->getId(),
+                'dateDemande' => $intervention->getIdDevisClient()->getCreatedAt(),
+                'dateIntervention' => $intervention->getCreatedAt(),
+                'etatIntervention' => $intervention->getEtat(),
+                'etatPaiement' => $intervention->getEtatPaiement(),
+                'nomArtisan' => $artisan->getIdUtilisateur()->getNom(),
+                'prenomArtisan' => $artisan->getIdUtilisateur()->getPrenom(),
+            ];
+        }
+
+        return new JsonResponse(['interventions' => $results]);
     }
 
 }
