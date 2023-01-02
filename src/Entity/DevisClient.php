@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Entity\Artisan;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
@@ -67,8 +69,12 @@ class DevisClient
     #[ORM\Column(length: 255)]
     private ?string $choixTypeTravaux = null;
 
+    #[ORM\OneToMany(mappedBy: 'idDevisClient', targetEntity: Intervention::class)]
+    private Collection $interventions;
+
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable();
+        $this->interventions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -252,6 +258,36 @@ class DevisClient
     public function setChoixTypeTravaux(string $choixTypeTravaux): self
     {
         $this->choixTypeTravaux = $choixTypeTravaux;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Intervention>
+     */
+    public function getInterventions(): Collection
+    {
+        return $this->interventions;
+    }
+
+    public function addIntervention(Intervention $intervention): self
+    {
+        if (!$this->interventions->contains($intervention)) {
+            $this->interventions->add($intervention);
+            $intervention->setIdDevisClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIntervention(Intervention $intervention): self
+    {
+        if ($this->interventions->removeElement($intervention)) {
+            // set the owning side to null (unless already changed)
+            if ($intervention->getIdDevisClient() === $this) {
+                $intervention->setIdDevisClient(null);
+            }
+        }
 
         return $this;
     }

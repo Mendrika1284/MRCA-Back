@@ -21,28 +21,41 @@ preparer_devis:
     path: /preparerDevis/{id}/{montant}
     methods: [PATCH]
     controller: App\Controller\API\DevisClientApiController::preparerDevis
+
  # Utilisateur   
 connexion_utilisateur:
     path: /connexion_utilisateur
     methods: [POST]
-    controller: App\Controller\API\Utilisateur::connexionUtilisateur
+    controller: App\Controller\API\UtilisateurController::connexionUtilisateur
 reception_devis:
     path: /receptionDevis/{email}
     methods: [GET]
-    controller: App\Controller\API\Utilisateur::receptionDevis
+    controller: App\Controller\API\UtilisateurController::receptionDevis
 visualiser_devis_client:
     path: /visualiserDevisClient/{id}
     methods: [GET]
-    controller: App\Controller\API\Utilisateur::visualiserDevisClient
+    controller: App\Controller\API\UtilisateurController::visualiserDevisClient
 valider_devis_client:
     path: /validerDevis/{id}
     methods: [PATCH]
-    controller: App\Controller\API\Utilisateur::validerDevis
+    controller: App\Controller\API\UtilisateurController::validerDevis
 refuser_devis_client:
     path: /refuserDevis/{id}
     methods: [PATCH]
-    controller: App\Controller\API\Utilisateur::refuserDevis
+    controller: App\Controller\API\UtilisateurController::refuserDevis
 supprimer_devis_client:
     path: /supprimerDevis/{id}
     methods: [DELETE]
-    controller: App\Controller\API\Utilisateur::supprimerDevis
+    controller: App\Controller\API\UtilisateurController::supprimerDevis
+reception_devis_par_id:
+    path: /receptionDevisParId/{id}
+    methods: [GET]
+    controller: App\Controller\API\UtilisateurController::receptionDevisParId
+demande_intervention:
+    path: /demandeIntervention
+    methods: [POST]
+    controller: App\Controller\API\UtilisateurController::demandeIntervention
+set_demande_devis_etat:
+    path: /setDemandeDevisEtat/{id}
+    methods: [PATCH]
+    controller: App\Controller\API\UtilisateurController::setDemandeDevisEtat

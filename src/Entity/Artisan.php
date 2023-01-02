@@ -66,9 +66,13 @@ class Artisan
     #[ORM\Column]
     private ?int $estOccupe = null;
 
+    #[ORM\OneToMany(mappedBy: 'idArtisan', targetEntity: Intervention::class)]
+    private Collection $interventions;
+
     public function __construct()
     {
         $this->devisClients = new ArrayCollection();
+        $this->interventions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -270,6 +274,36 @@ class Artisan
     public function setEstOccupe(int $estOccupe): self
     {
         $this->estOccupe = $estOccupe;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Intervention>
+     */
+    public function getInterventions(): Collection
+    {
+        return $this->interventions;
+    }
+
+    public function addIntervention(Intervention $intervention): self
+    {
+        if (!$this->interventions->contains($intervention)) {
+            $this->interventions->add($intervention);
+            $intervention->setIdArtisan($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIntervention(Intervention $intervention): self
+    {
+        if ($this->interventions->removeElement($intervention)) {
+            // set the owning side to null (unless already changed)
+            if ($intervention->getIdArtisan() === $this) {
+                $intervention->setIdArtisan(null);
+            }
+        }
 
         return $this;
     }

@@ -71,12 +71,16 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $statusCompte = 0;
 
+    #[ORM\OneToMany(mappedBy: 'idUtilisateur', targetEntity: Intervention::class)]
+    private Collection $interventions;
+
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable();
         $this->administrateurs = new ArrayCollection();
         $this->clients = new ArrayCollection();
         $this->entreprises = new ArrayCollection();
         $this->artisans = new ArrayCollection();
+        $this->interventions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -347,6 +351,36 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setStatusCompte(int $statusCompte): self
     {
         $this->statusCompte = $statusCompte;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Intervention>
+     */
+    public function getInterventions(): Collection
+    {
+        return $this->interventions;
+    }
+
+    public function addIntervention(Intervention $intervention): self
+    {
+        if (!$this->interventions->contains($intervention)) {
+            $this->interventions->add($intervention);
+            $intervention->setIdUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIntervention(Intervention $intervention): self
+    {
+        if ($this->interventions->removeElement($intervention)) {
+            // set the owning side to null (unless already changed)
+            if ($intervention->getIdUtilisateur() === $this) {
+                $intervention->setIdUtilisateur(null);
+            }
+        }
 
         return $this;
     }
