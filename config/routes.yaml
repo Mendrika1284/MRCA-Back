@@ -21,6 +21,22 @@ preparer_devis:
     path: /preparerDevis/{id}/{montant}
     methods: [PATCH]
     controller: App\Controller\API\DevisClientApiController::preparerDevis
+liste_intervention_renovation:
+    path: /listeInterventionRenovation/{id}
+    methods: [GET]
+    controller: App\Controller\API\InterventionController::listeInterventionRenovation
+liste_intervention_maintenance:
+    path: /listeInterventionMaintenance/{id}
+    methods: [GET]
+    controller: App\Controller\API\InterventionController::listeInterventionMaintenance
+planifier_temps:
+    path: /planifierTemps/{id}
+    methods: [POST]
+    controller: App\Controller\API\InterventionController::planifierTemps
+voir_temps_configurer:
+    path: /voirTempsConfigurer/{id}
+    methods: [GET]
+    controller: App\Controller\API\InterventionController::voirTempsConfigurer
 
  # Utilisateur   
 connexion_utilisateur:

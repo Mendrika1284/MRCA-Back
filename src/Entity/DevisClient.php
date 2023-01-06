@@ -72,9 +72,13 @@ class DevisClient
     #[ORM\OneToMany(mappedBy: 'idDevisClient', targetEntity: Intervention::class)]
     private Collection $interventions;
 
+    #[ORM\OneToMany(mappedBy: 'idDevisClient', targetEntity: DisponibiliteArtisan::class)]
+    private Collection $disponibiliteArtisans;
+
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable();
         $this->interventions = new ArrayCollection();
+        $this->disponibiliteArtisans = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -286,6 +290,36 @@ class DevisClient
             // set the owning side to null (unless already changed)
             if ($intervention->getIdDevisClient() === $this) {
                 $intervention->setIdDevisClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DisponibiliteArtisan>
+     */
+    public function getDisponibiliteArtisans(): Collection
+    {
+        return $this->disponibiliteArtisans;
+    }
+
+    public function addDisponibiliteArtisan(DisponibiliteArtisan $disponibiliteArtisan): self
+    {
+        if (!$this->disponibiliteArtisans->contains($disponibiliteArtisan)) {
+            $this->disponibiliteArtisans->add($disponibiliteArtisan);
+            $disponibiliteArtisan->setIdDevisClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDisponibiliteArtisan(DisponibiliteArtisan $disponibiliteArtisan): self
+    {
+        if ($this->disponibiliteArtisans->removeElement($disponibiliteArtisan)) {
+            // set the owning side to null (unless already changed)
+            if ($disponibiliteArtisan->getIdDevisClient() === $this) {
+                $disponibiliteArtisan->setIdDevisClient(null);
             }
         }
 

@@ -31,11 +31,19 @@ class UtilisateurController extends AbstractController
         $resultSetForClient = $stmtForClient->executeQuery(['email'=> $email, 'password' => $password]);
 
         $connexionClient = $resultSetForClient->fetchAllAssociative();
+
         if(empty($connexionClient[0])){
             return new JsonResponse(['erreur' => "Erreur de connexion"]);
         }else{
+            $sqlForArtisan = '
+            SELECT artisan.id FROM artisan JOIN utilisateur ON utilisateur.id = artisan.id_utilisateur_id WHERE utilisateur.id = :id
+        ';
+            $stmtForArtisan = $conn->prepare($sqlForArtisan);
+            $resultSetForArtisan = $stmtForArtisan->executeQuery(['id'=> $connexionClient[0]['id']]);
+    
+            $artisan = $resultSetForArtisan->fetchAllAssociative();
             $token = $tokenGenerator->generateToken();
-            return new JsonResponse(['connexionClient' => $connexionClient, 'token' => $token]);
+            return new JsonResponse(['connexionClient' => $connexionClient, 'token' => $token, 'artisan' => $artisan]);
         }
     }
 

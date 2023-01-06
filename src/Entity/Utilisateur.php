@@ -74,6 +74,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'idUtilisateur', targetEntity: Intervention::class)]
     private Collection $interventions;
 
+    #[ORM\OneToMany(mappedBy: 'idUtilisateur', targetEntity: DisponibiliteArtisan::class)]
+    private Collection $disponibiliteArtisans;
+
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable();
         $this->administrateurs = new ArrayCollection();
@@ -81,6 +84,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->entreprises = new ArrayCollection();
         $this->artisans = new ArrayCollection();
         $this->interventions = new ArrayCollection();
+        $this->disponibiliteArtisans = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -379,6 +383,36 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($intervention->getIdUtilisateur() === $this) {
                 $intervention->setIdUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DisponibiliteArtisan>
+     */
+    public function getDisponibiliteArtisans(): Collection
+    {
+        return $this->disponibiliteArtisans;
+    }
+
+    public function addDisponibiliteArtisan(DisponibiliteArtisan $disponibiliteArtisan): self
+    {
+        if (!$this->disponibiliteArtisans->contains($disponibiliteArtisan)) {
+            $this->disponibiliteArtisans->add($disponibiliteArtisan);
+            $disponibiliteArtisan->setIdUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDisponibiliteArtisan(DisponibiliteArtisan $disponibiliteArtisan): self
+    {
+        if ($this->disponibiliteArtisans->removeElement($disponibiliteArtisan)) {
+            // set the owning side to null (unless already changed)
+            if ($disponibiliteArtisan->getIdUtilisateur() === $this) {
+                $disponibiliteArtisan->setIdUtilisateur(null);
             }
         }
 
