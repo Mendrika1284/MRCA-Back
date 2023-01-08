@@ -25,7 +25,8 @@ class InterventionController extends AbstractController
         $conn = $entityManager->getConnection();
 
         $sqlForConnexion = '
-                    SELECT type_travaux.id as idTypeTravaux,
+                    SELECT  type_travaux.id as idTypeTravaux,
+                            intervention.id as idIntervention,
                             type_travaux.nom as nomTypeTravaux, 
                             devis_client.id as idDevis,
                             devis_client.created_at as dateCreation,
@@ -52,7 +53,8 @@ class InterventionController extends AbstractController
         $conn = $entityManager->getConnection();
 
         $sqlForConnexion = '
-                    SELECT type_travaux.id as idTypeTravaux,
+                    SELECT  type_travaux.id as idTypeTravaux,
+                            intervention.id as idIntervention,
                             type_travaux.nom as nomTypeTravaux, 
                             devis_client.id as idDevis,
                             devis_client.created_at as dateCreation,

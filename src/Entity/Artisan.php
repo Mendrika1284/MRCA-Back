@@ -69,10 +69,14 @@ class Artisan
     #[ORM\OneToMany(mappedBy: 'idArtisan', targetEntity: Intervention::class)]
     private Collection $interventions;
 
+    #[ORM\OneToMany(mappedBy: 'idArtisan', targetEntity: RendezVous::class)]
+    private Collection $rendezVouses;
+
     public function __construct()
     {
         $this->devisClients = new ArrayCollection();
         $this->interventions = new ArrayCollection();
+        $this->rendezVouses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -302,6 +306,36 @@ class Artisan
             // set the owning side to null (unless already changed)
             if ($intervention->getIdArtisan() === $this) {
                 $intervention->setIdArtisan(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RendezVous>
+     */
+    public function getRendezVouses(): Collection
+    {
+        return $this->rendezVouses;
+    }
+
+    public function addRendezVouse(RendezVous $rendezVouse): self
+    {
+        if (!$this->rendezVouses->contains($rendezVouse)) {
+            $this->rendezVouses->add($rendezVouse);
+            $rendezVouse->setIdArtisan($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRendezVouse(RendezVous $rendezVouse): self
+    {
+        if ($this->rendezVouses->removeElement($rendezVouse)) {
+            // set the owning side to null (unless already changed)
+            if ($rendezVouse->getIdArtisan() === $this) {
+                $rendezVouse->setIdArtisan(null);
             }
         }
 

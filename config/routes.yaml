@@ -37,6 +37,14 @@ voir_temps_configurer:
     path: /voirTempsConfigurer/{id}
     methods: [GET]
     controller: App\Controller\API\InterventionController::voirTempsConfigurer
+detail_utilisateur: # pour prendre l'email de l'utilisateur lors de la demande de rendez-vous
+    path: /detailUtilisateur/{email}
+    methods: [GET]
+    controller: App\Controller\API\RendezVousController::detailUtilisateur
+creer_rendez_vous:
+    path: /creerRendezVous
+    methods: [GET,POST]
+    controller: App\Controller\API\RendezVousController::creerRendezVous
 
  # Utilisateur   
 connexion_utilisateur:

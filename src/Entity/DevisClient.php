@@ -75,10 +75,14 @@ class DevisClient
     #[ORM\OneToMany(mappedBy: 'idDevisClient', targetEntity: DisponibiliteArtisan::class)]
     private Collection $disponibiliteArtisans;
 
+    #[ORM\OneToMany(mappedBy: 'idDevisClient', targetEntity: RendezVous::class)]
+    private Collection $rendezVouses;
+
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable();
         $this->interventions = new ArrayCollection();
         $this->disponibiliteArtisans = new ArrayCollection();
+        $this->rendezVouses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -320,6 +324,36 @@ class DevisClient
             // set the owning side to null (unless already changed)
             if ($disponibiliteArtisan->getIdDevisClient() === $this) {
                 $disponibiliteArtisan->setIdDevisClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RendezVous>
+     */
+    public function getRendezVouses(): Collection
+    {
+        return $this->rendezVouses;
+    }
+
+    public function addRendezVouse(RendezVous $rendezVouse): self
+    {
+        if (!$this->rendezVouses->contains($rendezVouse)) {
+            $this->rendezVouses->add($rendezVouse);
+            $rendezVouse->setIdDevisClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRendezVouse(RendezVous $rendezVouse): self
+    {
+        if ($this->rendezVouses->removeElement($rendezVouse)) {
+            // set the owning side to null (unless already changed)
+            if ($rendezVouse->getIdDevisClient() === $this) {
+                $rendezVouse->setIdDevisClient(null);
             }
         }
 
