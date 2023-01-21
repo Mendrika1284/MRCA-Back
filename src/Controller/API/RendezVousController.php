@@ -84,5 +84,31 @@ class RendezVousController extends AbstractController
         return new JsonResponse(['status' => 'success']);        
     }
 
+    /**
+     * @Route("/allRendezVousArtisan/{id}", methods={"GET"})
+     */
+    public function allRendezVousArtisan(ManagerRegistry $doctrine, int $id)
+    {
+    $entityManager = $doctrine->getManager();
+    $conn = $entityManager->getConnection();
+
+    $sqlForEvenement = '
+    SELECT rendez_vous.id,
+           rendez_vous.titre,
+           rendez_vous.description,
+           rendez_vous.date,
+           rendez_vous.heure_debut as heureDebut,
+           rendez_vous.heure_fin as heureFin
+    FROM rendez_vous
+    WHERE rendez_vous.id_artisan_id = :id
+    ';
+    $stmtForEvenement = $conn->prepare($sqlForEvenement);
+    $resultSetForEvenement = $stmtForEvenement->executeQuery(['id'=>$id]);
+
+    $evenement = $resultSetForEvenement->fetchAllAssociative();
+
+    return new JsonResponse(['rendez_vous' => $evenement]);
+}
+
 
 }

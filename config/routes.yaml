@@ -45,6 +45,22 @@ creer_rendez_vous:
     path: /creerRendezVous
     methods: [GET,POST]
     controller: App\Controller\API\RendezVousController::creerRendezVous
+ajouter_evenement:
+    path: /ajouterEvenement
+    methods: [POST]
+    controller: App\Controller\API\AgendaController::ajouterEvenement
+enlever_evenement:
+    path: /enleverEvenement
+    methods: [DELETE]
+    controller: App\Controller\API\AgendaController::enleverEvenement
+all_evenement:
+    path: /allEvenement/{id}
+    methods: [POST]
+    controller: App\Controller\API\AgendaController::allEvenement
+all_rendez_vous_artisan:
+    path: /allRendezVousArtisan
+    methods: [GET]
+    controller: App\Controller\API\RendezVousController::allRendezVousArtisan
 
  # Utilisateur   
 connexion_utilisateur:

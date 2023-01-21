@@ -80,6 +80,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'idUtilisateur', targetEntity: RendezVous::class)]
     private Collection $rendezVouses;
 
+    #[ORM\OneToMany(mappedBy: 'idUtilisateur', targetEntity: Evenement::class)]
+    private Collection $evenements;
+
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable();
         $this->administrateurs = new ArrayCollection();
@@ -89,6 +92,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->interventions = new ArrayCollection();
         $this->disponibiliteArtisans = new ArrayCollection();
         $this->rendezVouses = new ArrayCollection();
+        $this->evenements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -447,6 +451,36 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($rendezVouse->getIdUtilisateur() === $this) {
                 $rendezVouse->setIdUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Evenement>
+     */
+    public function getEvenements(): Collection
+    {
+        return $this->evenements;
+    }
+
+    public function addEvenement(Evenement $evenement): self
+    {
+        if (!$this->evenements->contains($evenement)) {
+            $this->evenements->add($evenement);
+            $evenement->setIdUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvenement(Evenement $evenement): self
+    {
+        if ($this->evenements->removeElement($evenement)) {
+            // set the owning side to null (unless already changed)
+            if ($evenement->getIdUtilisateur() === $this) {
+                $evenement->setIdUtilisateur(null);
             }
         }
 
