@@ -110,5 +110,152 @@ class RendezVousController extends AbstractController
     return new JsonResponse(['rendez_vous' => $evenement]);
 }
 
+    /**
+     * @Route("/rendezVousClientAValider/{id}", methods={"GET"})
+     */
+    public function rendezVousClientAValider(ManagerRegistry $doctrine, int $id)
+    {
+    $entityManager = $doctrine->getManager();
+    $conn = $entityManager->getConnection();
+
+    $sqlForEvenement = '
+    SELECT rendez_vous.id,
+           rendez_vous.titre,
+           rendez_vous.description,
+           rendez_vous.date,
+           rendez_vous.heure_debut as heureDebut,
+           rendez_vous.heure_fin as heureFin
+    FROM rendez_vous
+    WHERE rendez_vous.id_utilisateur_id = :id and rendez_vous.etat = 0
+    ';
+    $stmtForEvenement = $conn->prepare($sqlForEvenement);
+    $resultSetForEvenement = $stmtForEvenement->executeQuery(['id'=>$id]);
+
+    $evenement = $resultSetForEvenement->fetchAllAssociative();
+
+    return new JsonResponse(['rendez_vous' => $evenement]);
+}
+
+/**
+     * @Route("/getRendezVousById/{id}", methods={"GET"})
+     */
+    public function getRendezVousById(ManagerRegistry $doctrine, int $id)
+    {
+    $entityManager = $doctrine->getManager();
+    $conn = $entityManager->getConnection();
+
+    $sqlForEvenement = '
+    SELECT rendez_vous.id,
+           rendez_vous.titre,
+           rendez_vous.description,
+           rendez_vous.date,
+           rendez_vous.heure_debut as heureDebut,
+           rendez_vous.heure_fin as heureFin
+    FROM rendez_vous
+    WHERE rendez_vous.id = :id
+    ';
+    $stmtForEvenement = $conn->prepare($sqlForEvenement);
+    $resultSetForEvenement = $stmtForEvenement->executeQuery(['id'=>$id]);
+
+    $evenement = $resultSetForEvenement->fetchAllAssociative();
+
+    return new JsonResponse(['rendez_vous' => $evenement]);
+}
+
+    /**
+     * @Route("/reporterRDV/{id}", methods={"PATCH"})
+     */
+    public function reporterRDV(int $id, Request $request, ManagerRegistry $doctrine)
+    {
+        $data = json_decode($request->getContent(), true);
+        $rdv = $doctrine->getRepository(RendezVous::class)->find($id);
+
+        if (!$rdv) {
+            throw new NotFoundHttpException('Rendez-vous non trouvé');
+        }
+
+        $date = \DateTimeImmutable::createFromFormat('Y-m-d', $data['date']);
+        $rdv->setDate($date);
+        $rdv->setHeureDebut($data["heureDebut"]);
+        $rdv->setHeureFin($data["heureFin"]);
+
+        $em = $doctrine->getManager();
+        $em->persist($rdv);
+        $em->flush();
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @Route("/validerRendezVousByClient/{id}", methods={"PATCH"})
+     */
+    public function validerRendezVousByClient(int $id, Request $request, ManagerRegistry $doctrine)
+    {
+        $devisClient = $doctrine->getRepository(RendezVous::class)->find($id);
+
+        if (!$devisClient) {
+            throw new NotFoundHttpException('Rendez-vous non trouvé');
+        }
+
+        // Etat validé
+        $devisClient->setEtat(1);
+
+        $em = $doctrine->getManager();
+        $em->persist($devisClient);
+        $em->flush();
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @Route("/refuserRendezVousByClient/{id}", methods={"PATCH"})
+     */
+    public function refuserRendezVousByClient(int $id, Request $request, ManagerRegistry $doctrine)
+    {
+        $devisClient = $doctrine->getRepository(RendezVous::class)->find($id);
+
+        if (!$devisClient) {
+            throw new NotFoundHttpException('Rendez-vous non trouvé');
+        }
+
+        // Etat validé
+        $devisClient->setEtat(2);
+
+        $em = $doctrine->getManager();
+        $em->persist($devisClient);
+        $em->flush();
+
+        return new JsonResponse(null, 204);
+    }
+
+
+/**
+     * @Route("/getRendezVousFromListeDevis/{id}", methods={"GET"})
+     */
+    public function getRendezVousFromListeDevis(ManagerRegistry $doctrine, int $id)
+    {
+    $entityManager = $doctrine->getManager();
+    $conn = $entityManager->getConnection();
+
+    $sqlForEvenement = '
+    SELECT rendez_vous.id,
+           rendez_vous.titre,
+           rendez_vous.description,
+           rendez_vous.date,
+           rendez_vous.heure_debut as heureDebut,
+           rendez_vous.heure_fin as heureFin,
+           rendez_vous.etat
+    FROM rendez_vous
+    JOIN devis_client ON devis_client.id = rendez_vous.id_devis_client_id
+    WHERE rendez_vous.id_devis_client_id = :id 
+    ';
+    $stmtForEvenement = $conn->prepare($sqlForEvenement);
+    $resultSetForEvenement = $stmtForEvenement->executeQuery(['id'=>$id]);
+
+    $evenement = $resultSetForEvenement->fetchAllAssociative();
+
+    return new JsonResponse(['rendez_vous' => $evenement]);
+}
+
 
 }

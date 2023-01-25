@@ -99,3 +99,31 @@ liste_intervention_client:
     path: /listeInterventionClient/{id}
     methods: [GET]
     controller: App\Controller\API\UtilisateurController::listeInterventionClient
+rendez_vous_client_a_valider:
+    path: /rendezVousClientAValider/{id}
+    methods: [GET]
+    controller: App\Controller\API\RendezVousController::rendezVousClientAValider
+get_rendez_vous_by_id:
+    path: /getRendezVousById/{id}
+    methods: [GET]
+    controller: App\Controller\API\RendezVousController::getRendezVousById
+valider_rendez_vous_by_client:
+    path: /validerRendezVousByClient/{id}
+    methods: [PATCH]
+    controller: App\Controller\API\RendezVousController::validerRendezVousByClient
+refuser_rendez_vous_by_client:
+    path: /refuserRendezVousByClient/{id}
+    methods: [PATCH]
+    controller: App\Controller\API\RendezVousController::refuserRendezVousByClient
+reporter_rdv:
+    path: /reporterRDV/{id}
+    methods: [PATCH]
+    controller: App\Controller\API\RendezVousController::reporterRDV
+get_rendez_vous_from_list_devis:
+    path: /getRendezVousFromListeDevis/{id}
+    methods: [GET]
+    controller: App\Controller\API\RendezVousController::getRendezVousFromListeDevis
+devis_client_by_id:
+    path: /devisClientById/{id}
+    methods: [GET]
+    controller: App\Controller\API\DevisClientController::devisClientById

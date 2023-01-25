@@ -159,4 +159,31 @@ class DevisClientApiController extends AbstractController
 
         return new JsonResponse(null, 204);
     }
+
+    /**
+     * @Route("/devisClientById/{id}", methods={"GET"})
+     */
+    public function devisClientById(int $id, ManagerRegistry $doctrine)
+    {
+        $entityManager = $doctrine->getManager();
+        $conn = $entityManager->getConnection();
+
+        $sqlForDevisClient = '
+                SELECT devis_client.id as idDevis,
+                       devis_client.created_at as dateCreation,
+                       devis_client.etat as etatDevis,
+                       devis_client.email as emailClient,
+                       artisan.id as idArtisan
+                FROM devis_client
+                JOIN artisan ON devis_client.id_artisan_id = artisan.id
+                WHERE devis_client.id = :id 
+            ';
+        $stmtForDevisClient = $conn->prepare($sqlForDevisClient);
+        $resultSetForDevisClient = $stmtForDevisClient->executeQuery(['id'=> $id]);
+
+        $devisArtisan = $resultSetForDevisClient->fetchAllAssociative();
+
+        return new JsonResponse(['devisClient' => $devisArtisan]);
+    }
+
 }
