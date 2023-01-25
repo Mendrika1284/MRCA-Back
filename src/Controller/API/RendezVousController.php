@@ -98,9 +98,10 @@ class RendezVousController extends AbstractController
            rendez_vous.description,
            rendez_vous.date,
            rendez_vous.heure_debut as heureDebut,
-           rendez_vous.heure_fin as heureFin
+           rendez_vous.heure_fin as heureFin,
+           rendez_vous.etat
     FROM rendez_vous
-    WHERE rendez_vous.id_artisan_id = :id
+    WHERE rendez_vous.id_artisan_id = :id AND rendez_vous.etat != 2
     ';
     $stmtForEvenement = $conn->prepare($sqlForEvenement);
     $resultSetForEvenement = $stmtForEvenement->executeQuery(['id'=>$id]);
@@ -199,6 +200,27 @@ class RendezVousController extends AbstractController
 
         // Etat validé
         $devisClient->setEtat(1);
+
+        $em = $doctrine->getManager();
+        $em->persist($devisClient);
+        $em->flush();
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @Route("/validerRendezVousByArtisan/{id}", methods={"PATCH"})
+     */
+    public function validerRendezVousByArtisan(int $id, Request $request, ManagerRegistry $doctrine)
+    {
+        $devisClient = $doctrine->getRepository(RendezVous::class)->find($id);
+
+        if (!$devisClient) {
+            throw new NotFoundHttpException('Rendez-vous non trouvé');
+        }
+
+        // Etat validé
+        $devisClient->setEtat(6);
 
         $em = $doctrine->getManager();
         $em->persist($devisClient);

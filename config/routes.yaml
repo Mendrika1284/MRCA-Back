@@ -127,3 +127,7 @@ devis_client_by_id:
     path: /devisClientById/{id}
     methods: [GET]
     controller: App\Controller\API\DevisClientController::devisClientById
+valider_rendez_vous_by_artisan:
+    path: /validerRendezVousByArtisan/{id}
+    methods: [PATCH]
+    controller: App\Controller\API\RendezVousController::validerRendezVousByArtisan
