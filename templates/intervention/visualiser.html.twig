@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Voir Intervention{% endblock %}
+
+{% block stylesheets %}
+<style>
+#map1{
+	height:400px;
+	width: 470px;
+}
+#map2{
+	height:400px;
+	width: 470px;
+}
+.table-responsive {
+    max-height:300px;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<center><h1 class="mt-4 mb-4">Détail intervention N°{{ intervention[0].idIntervention }}</h1></center>
+
+<div class="col d-flex justify-content-center">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="card" style="width: 80rem; height: 25rem">
+				<div class="card-body text-left">
+					<h5 class="card-title">Travaux à faire: <b>{{intervention[0].typeTravaux}} {{intervention[0].categorieTravaux}}</b></h5>
+                    <h6 class="card-text">Details demande: <b>{{intervention[0].detailsDemandeClient}}</b></h6>
+                    <h6 class="card-text">Date debut estimé: <b>{{intervention[0].dateDebut|date("Y-m-d")}}</b></h6>
+					<h6 class="card-text">Date fin estimé: <b>{{intervention[0].dateFin|date("Y-m-d")}}</b></h6>
+					{% if(intervention[0].etatIntervention == 0) %}
+					<h6 class="card-text mb-4">Etat intervention: <b>A faire</b></h6>
+					{% elseif(intervention[0].etatIntervention == 1) %}
+					<h6 class="card-text mb-4">Etat intervention: <b>En cours</b></h6>
+					{% elseif(intervention[0].etatIntervention == 2) %}
+					<h6 class="card-text mb-4">Etat intervention: <b>Terminer</b></h6>
+					{% endif %}
+					<h6 class="card-text">Nom Client: <b>{{intervention[0].nomUtilisateur}}</b></h6>
+					<h6 class="card-text">Prenom Client: <b>{{intervention[0].prenomUtilisateur}}</b></h6><br>
+                    <h6 class="card-text">Montant: <b>{{intervention[0].montant}} Ar HT</b></h6>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 d-flex justify-content-deploy">
+			<div class="" id="map1"></div> 
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://maps.google.com/maps/api/js?key=AIzaSyB6pMvczInWTWXzYwfMbbHvM0MUtvXLALc" type="text/javascript"></script>
+		<script async type="text/javascript">
+			// Fonction d'initialisation de la carte 
+			function initMap1() {
+				var latitude = {{intervention[0].positionX}};
+				var longitude = {{intervention[0].positionY}};
+				var myLatlng = new google.maps.LatLng(latitude,longitude);
+				var mapOptions = {
+				zoom: 16,
+				center: myLatlng,
+				mapTypeId: 'hybrid'
+				}
+				var map = new google.maps.Map(document.getElementById("map1"), mapOptions);
+
+				var marker = new google.maps.Marker({
+					position: myLatlng,
+					title:"Ici"
+				});
+
+				marker.setMap(map);
+			}
+
+			window.onload = function(){
+				initMap1();
+			};
+		</script>
+{% endblock %}
