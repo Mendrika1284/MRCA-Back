@@ -3,23 +3,23 @@
 {% block title %}Menu{% endblock %}
 
 {% block body %}
-<table class="table table-responsive-sm">
+<table class="table table-responsive-sm table-hover">
     <thead>
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">Date demande</th>
-            <th scope="col">Type travaux</th>
-            <th scope="col">Etat</th>
+            <th class="text-center" scope="col">#</th>
+            <th class="text-center" scope="col">Date demande</th>
+            <th class="text-center" scope="col">Type travaux</th>
+            <th class="text-center" scope="col">Etat</th>
         </tr>
     </thead>
     <tbody>
     {% for devis in devisClient %}
         <tr>
-            <th scope="row">{{ devis.idDevis }}</th>
-            <td>{{ devis.dateCreation }}</td>
-            <td>{{ devis.nomTypeTravaux }}</td>
+            <th class="text-center" scope="row">{{ devis.idDevis }}</th>
+            <td class="text-center">{{ devis.dateCreation|date("Y-m-d") }}</td>
+            <td class="text-center">{{ devis.nomTypeTravaux }}</td>
             {% if(devis.etatDevis == 0) %}
-            <td class="text-primary">A assigner</td>
+            <td class="text-primary tex-center">A assigner</td>
             <td>
                 <div class="btn-group dropend">
                     <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -33,7 +33,7 @@
                 </div>
             </td>
             {% elseif(devis.etatDevis == 1) %}
-            <td class="text-info">A préparer</td>
+            <td class="text-info test-center">A préparer</td>
             <td>
                 <div class="btn-group dropend">
                     <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -46,7 +46,7 @@
                 </div>
             </td>
             {% elseif(devis.etatDevis == 2) %}
-            <td class="text-warning">En attente validation</td>
+            <td class="text-warning text-center">En attente validation</td>
             <td>
                 <div class="btn-group dropend">
                     <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -59,7 +59,7 @@
                 </div>
             </td>
             {% elseif(devis.etatDevis == 3) %}
-            <td class="text-success">Validé</td>
+            <td class="text-success text-center">Validé</td>
             <td>
                 <div class="btn-group dropend">
                     <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -72,7 +72,7 @@
                 </div>
             </td>
             {% elseif(devis.etatDevis == 4) %}
-            <td class="text-danger">Refusé</td>
+            <td class="text-danger text-center">Refusé</td>
             <td>
                 <div class="btn-group dropend">
                     <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">

@@ -22,14 +22,39 @@
 <center><h1 class="mt-4 mb-4">Détail devis N°{{ devisClient[0].idDevis }}</h1></center>
 
 <div class="col d-flex justify-content-center">
-<div class="card" style="width: 80rem;">
-  <div class="card-body">
-    <h5 class="card-title">Travaux à faire: {{devisClient[0].nomTypeTravaux}}</h5>
-    <h6 class="card-text">Détail: {{devisClient[0].detailDevis}}</h6>
-    <h6 class="card-text">Lieu du travail: <a href="#" class="card-link" data-bs-toggle='modal' data-bs-target='#mapClient' >Voir sur google maps</a></h6>
-	<h6 class="card-text mb-4">Date demande: {{devisClient[0].dateCreation}}</h6>
-  </div>
-</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="card" style="width: 80rem; height: 25rem">
+				<div class="card-body text-left">
+					<h5 class="card-title">Travaux à faire: <b>{{devisClient[0].choixTypeTravaux}} {{devisClient[0].nomTypeTravaux}}</b></h5>
+					<h6 class="card-text">Détail: <b>{{devisClient[0].detailDevis}}</b></h6>
+					<h6 class="card-text">Date demande: <b>{{devisClient[0].dateCreation|date("Y-m-d")}}</b></h6>
+					<h6 class="card-text">Date debut estimé: <b>{{devisClient[0].dateDebut|date("Y-m-d")}}</b></h6>
+					<h6 class="card-text">Date fin estimé: <b>{{devisClient[0].dateFin|date("Y-m-d")}}</b></h6>
+					<h6 class="card-text">Duree estimé: <b>{{devisClient[0].dureeTravaux}} mois </b></h6>
+					{% if(devisClient[0].etatDevis == 0) %}
+					<h6 class="card-text mb-4">Etat devis: <b>A Assigner</b></h6>
+					{% elseif(devisClient[0].etatDevis == 1) %}
+					<h6 class="card-text mb-4">Etat devis: <b>A préparer</b></h6>
+					{% elseif(devisClient[0].etatDevis == 2) %}
+					<h6 class="card-text mb-4">Etat devis: <b>En attente validation</b></h6>
+					{% elseif(devisClient[0].etatDevis == 3) %}
+					<h6 class="card-text mb-4">Etat devis: <b>Validé</b></h6>
+					{% elseif(devisClient[0].etatDevis == 4) %}
+					<h6 class="card-text mb-4">Etat devis: <b>Refusé</b></h6>
+					{% elseif(devisClient[0].etatDevis == 5) %}
+					<h6 class="card-text mb-4">Etat devis: <b>En attente intervention</b></h6>
+					{% endif %}
+					<h6 class="card-text">Nom Client: <b>{{client[0].nomUtilisateur}}</b></h6>
+					<h6 class="card-text">Prenom Client: <b>{{client[0].prenomUtilisateur}}</b></h6>
+					<h6 class="card-text">Contact Client: <b>+261 {{client[0].contactUtilisateur}}</b></h6>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div id="map1"></div> 
+		</div>
+	</div>
 </div>
 
 

@@ -89,7 +89,12 @@ class DevisController extends BaseController
                        devis_client.position_y as devisPositionY,
                        devis_client.info_supplementaire as detailDevis,
                        devis_client.created_at as dateCreation,
-                       devis_client.etat as etatDevis
+                       devis_client.etat as etatDevis,
+                       devis_client.email as emailClient,
+                       devis_client.date_debut as dateDebut,
+                       devis_client.date_fin as dateFin,
+                       devis_client.duree as dureeTravaux,
+                       devis_client.choix_type_travaux as choixTypeTravaux
                 FROM devis_client
                 JOIN type_travaux ON type_travaux.id = devis_client.id_type_travaux_id
                 WHERE devis_client.id = :idDevis
@@ -117,11 +122,25 @@ class DevisController extends BaseController
 
         $artisan = $resultSetForArtisan->fetchAllAssociative();
 
+        $sqlForDetailUtilisateur = '
+        SELECT utilisateur.id as idUtilisateur,
+               utilisateur.nom as nomUtilisateur,
+               utilisateur.prenom as prenomUtilisateur,
+               utilisateur.contact as contactUtilisateur
+        FROM utilisateur
+        WHERE utilisateur.email = :email 
+            ';
+        $stmtForDetailUtilisateur = $conn->prepare($sqlForDetailUtilisateur);
+        $resultSetForDetailUtilisateur = $stmtForDetailUtilisateur->executeQuery(['email'=> $devisClient[0]['emailClient']]);
+
+        $detailUtilisateur = $resultSetForDetailUtilisateur->fetchAllAssociative();
+
 
         return $this->render('devis/visualiser.html.twig', [
             'nomUtilisateur' => $this->sessionUtilisateur,
             'devisClient' => $devisClient,
-            'artisans' => $artisan
+            'artisans' => $artisan,
+            'client' => $detailUtilisateur
         ]);
     }
 
