@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste intervention{% endblock %}
+
+{% block body %}
+
+<center><h1 class="mt-4">Liste Intervention</h1></center>
+
+<table class="table table-responsive table-sm mt-4 table-bordered table-hovered">
+    <thead>
+        <tr>
+            <th class="text-center" scope="col">#</th>
+            <th class="text-center" scope="col">Description</th>
+            <th class="text-center" scope="col">Distance client artisan</th>
+            <th class="text-center" scope="col">Etat</th>
+            <th class="text-center" scope="col">Etat paiement</th>
+            <th class="text-center" scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for intervention in listeIntervention %}
+        <tr>
+            <th class="text-center" scope="row">{{intervention.id}}</th>
+            <td class="text-center" >{{intervention.description}}</td>
+            <td class="text-center" >{{intervention.distanceClientArtisan}} km</td>
+            {% if(intervention.etat == 0) %}
+            <td class="text-primary text-center">À faire</td>
+            {% elseif(intervention.etat == 1) %}
+            <td class="text-warning text-center">En cours</td>
+            {% elseif(intervention.etat == 2) %}
+            <td class="text-success text-center">Terminée</td>
+            {% endif %}
+            {% if(intervention.etatPaiement == 0) %}
+            <td class="text-danger text-center">Non payer</td>
+            {% elseif(intervention.etatPaiement == 1) %}
+            <td class="text-success text-center">Payer</td>
+            {% endif %}
+            <td><a class="text-center" href="/visualiserIntervention/{{intervention.id}}"><button class="btn btn-primary">Visualiser</button></a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="navigation d-flex justify-content-center">
+    {{ knp_pagination_render(listeIntervention) }}
+</div>
+{% endblock %}

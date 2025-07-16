@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajout Utilisateur{% endblock %}
+
+{% block body %}
+
+<center><h1 class="mt-4">Ajouter Utilisateur</h1></center>
+
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success" role="alert">{{ message }}</div>
+{% endfor %}
+
+{{ form(form) }}
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste Utilisateur{% endblock %}
+
+{% block body %}
+
+<center><h1 class="mt-4">Liste Utilisateur Confondues</h1></center>
+
+<table class="table table-responsive table-sm mt-4 table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Prénom(s)</th>
+            <th scope="col">Contact</th>
+            <th scope="col">Adresse</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Date Creation</th>
+            <th scope="col">Status Compte</th>
+            <th scope="col"></th>
+            <th scope="col">Action</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for utilisateur in listeUtilisateur %}
+        <tr>
+            <th scope="row">{{utilisateur.id}}</th>
+            <td>{{utilisateur.nom}}</td>
+            <td>{{utilisateur.prenom}}</td>
+            <td>{{utilisateur.contact}}</td>
+            <td>{{utilisateur.adresse}}</td>
+            <td>{{utilisateur.email}}</td>
+            <td>{{utilisateur.roles|join(', ')}}</td>
+            <td>{{utilisateur.getCreatedAt().format('d/m/Y')}}</td>
+            {% if(utilisateur.statusCompte == 0) %}
+            <td class="text-danger">Inactif</td>
+            {% else %}
+            <td class="text-success">Actif</td>
+            {% endif %}
+            <td><a href="/voirUtilisateur/{{utilisateur.id}}"><button class="btn btn-primary">Visualiser</button></a></td>
+            <td><a href="/modifierUtilisateur/{{utilisateur.id}}"><button class="btn btn-secondary">Modifier</button></a></td>
+            {% if(utilisateur.statusCompte == 0) %}
+            <td><a href="/activerUtilisateur/{{utilisateur.id}}"><button class="btn btn-warning">Activer</button></a></td>
+            {% else %}
+            <td><a href="/desactiverUtilisateur/{{utilisateur.id}}"><button class="btn btn-danger">Désactiver</button></a></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="navigation d-flex justify-content-center">
+    {{ knp_pagination_render(listeUtilisateur) }}
+</div>
+{% endblock %}

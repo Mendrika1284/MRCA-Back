@@ -1,3 +1,133 @@
 controllers:
     resource: ../src/Controller/
     type: attribute
+api_login_check:
+    path: /api/login_check
+
+# Artisan
+liste_devis_par_artisan:
+    path: /listeDevisParArtisan
+    methods: [GET]
+    controller: App\Controller\API\DevisClientApiController::listeDevisParArtisan
+visualiser_devis_artisan:
+    path: /visualiserDevisArtisan
+    methods: [GET]
+    controller: App\Controller\API\DevisClientApiController::visualiserDevisArtisan
+visualiser_devis_artisan_a_preparer:
+    path: /visualiserDevisArtisanApreparer
+    methods: [GET]
+    controller: App\Controller\API\DevisClientApiController::visualiserDevisArtisanApreparer
+preparer_devis:
+    path: /preparerDevis/{id}/{montant}
+    methods: [PATCH]
+    controller: App\Controller\API\DevisClientApiController::preparerDevis
+liste_intervention_renovation:
+    path: /listeInterventionRenovation/{id}
+    methods: [GET]
+    controller: App\Controller\API\InterventionController::listeInterventionRenovation
+liste_intervention_maintenance:
+    path: /listeInterventionMaintenance/{id}
+    methods: [GET]
+    controller: App\Controller\API\InterventionController::listeInterventionMaintenance
+planifier_temps:
+    path: /planifierTemps/{id}
+    methods: [POST]
+    controller: App\Controller\API\InterventionController::planifierTemps
+voir_temps_configurer:
+    path: /voirTempsConfigurer/{id}
+    methods: [GET]
+    controller: App\Controller\API\InterventionController::voirTempsConfigurer
+detail_utilisateur: # pour prendre l'email de l'utilisateur lors de la demande de rendez-vous
+    path: /detailUtilisateur/{email}
+    methods: [GET]
+    controller: App\Controller\API\RendezVousController::detailUtilisateur
+creer_rendez_vous:
+    path: /creerRendezVous
+    methods: [GET,POST]
+    controller: App\Controller\API\RendezVousController::creerRendezVous
+ajouter_evenement:
+    path: /ajouterEvenement
+    methods: [POST]
+    controller: App\Controller\API\AgendaController::ajouterEvenement
+enlever_evenement:
+    path: /enleverEvenement
+    methods: [DELETE]
+    controller: App\Controller\API\AgendaController::enleverEvenement
+all_evenement:
+    path: /allEvenement/{id}
+    methods: [POST]
+    controller: App\Controller\API\AgendaController::allEvenement
+all_rendez_vous_artisan:
+    path: /allRendezVousArtisan
+    methods: [GET]
+    controller: App\Controller\API\RendezVousController::allRendezVousArtisan
+
+ # Utilisateur   
+connexion_utilisateur:
+    path: /connexion_utilisateur
+    methods: [POST]
+    controller: App\Controller\API\UtilisateurController::connexionUtilisateur
+reception_devis:
+    path: /receptionDevis/{email}
+    methods: [GET]
+    controller: App\Controller\API\UtilisateurController::receptionDevis
+visualiser_devis_client:
+    path: /visualiserDevisClient/{id}
+    methods: [GET]
+    controller: App\Controller\API\UtilisateurController::visualiserDevisClient
+valider_devis_client:
+    path: /validerDevis/{id}
+    methods: [PATCH]
+    controller: App\Controller\API\UtilisateurController::validerDevis
+refuser_devis_client:
+    path: /refuserDevis/{id}
+    methods: [PATCH]
+    controller: App\Controller\API\UtilisateurController::refuserDevis
+supprimer_devis_client:
+    path: /supprimerDevis/{id}
+    methods: [DELETE]
+    controller: App\Controller\API\UtilisateurController::supprimerDevis
+reception_devis_par_id:
+    path: /receptionDevisParId/{id}
+    methods: [GET]
+    controller: App\Controller\API\UtilisateurController::receptionDevisParId
+set_demande_devis_etat:
+    path: /setDemandeDevisEtat/{id}
+    methods: [PATCH]
+    controller: App\Controller\API\UtilisateurController::setDemandeDevisEtat
+liste_intervention_client:
+    path: /listeInterventionClient/{id}
+    methods: [GET]
+    controller: App\Controller\API\UtilisateurController::listeInterventionClient
+rendez_vous_client_a_valider:
+    path: /rendezVousClientAValider/{id}
+    methods: [GET]
+    controller: App\Controller\API\RendezVousController::rendezVousClientAValider
+get_rendez_vous_by_id:
+    path: /getRendezVousById/{id}
+    methods: [GET]
+    controller: App\Controller\API\RendezVousController::getRendezVousById
+valider_rendez_vous_by_client:
+    path: /validerRendezVousByClient/{id}
+    methods: [PATCH]
+    controller: App\Controller\API\RendezVousController::validerRendezVousByClient
+refuser_rendez_vous_by_client:
+    path: /refuserRendezVousByClient/{id}
+    methods: [PATCH]
+    controller: App\Controller\API\RendezVousController::refuserRendezVousByClient
+reporter_rdv:
+    path: /reporterRDV/{id}
+    methods: [PATCH]
+    controller: App\Controller\API\RendezVousController::reporterRDV
+get_rendez_vous_from_list_devis:
+    path: /getRendezVousFromListeDevis/{id}
+    methods: [GET]
+    controller: App\Controller\API\RendezVousController::getRendezVousFromListeDevis
+devis_client_by_id:
+    path: /devisClientById/{id}
+    methods: [GET]
+    controller: App\Controller\API\DevisClientController::devisClientById
+valider_rendez_vous_by_artisan:
+    path: /validerRendezVousByArtisan/{id}
+    methods: [PATCH]
+    controller: App\Controller\API\RendezVousController::validerRendezVousByArtisan

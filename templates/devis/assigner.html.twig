@@ -1,0 +1,169 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Assigner Devis{% endblock %}
+
+{% block stylesheets %}
+<style>
+#map1{
+	height:400px;
+	width: 470px;
+}
+#map2{
+	height:400px;
+	width: 470px;
+}
+.table-responsive {
+    max-height:300px;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<center><h1 class="mt-4 mb-4">Assigner devis N°{{ devisClient[0].idDevis }}</h1></center>
+
+<div class="col d-flex justify-content-center">
+<div class="card" style="width: 80rem;">
+  <div class="card-body">
+    <h5 class="card-title">Travaux à faire: {{devisClient[0].nomTypeTravaux}}</h5>
+    <h6 class="card-text">Détail: {{devisClient[0].detailDevis}}</h6>
+    <h6 class="card-text">Lieu du travail: <a href="#" class="card-link" data-bs-toggle='modal' data-bs-target='#mapClient' >Voir sur google maps</a></h6>
+	<h6 class="card-text mb-4">Date demande: {{devisClient[0].dateCreation}}</h6>
+	<table class="table table-responsive table-bordered">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Nom</th>
+				<th scope="col">Prénom</th>
+				<th scope="col">Contact</th>
+				<th scope="col">Email</th>
+				<th scope="col">Disponibilité</th>
+				<th scope="col">Location</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for artisan in artisans %}
+			<tr>
+				<th scope="row">{{artisan.idArtisan}}</th>
+				<td>{{artisan.nomArtisan}}</td>
+				<td>{{artisan.prenomArtisan}}</td>
+				<td>{{artisan.contactArtisan}}</td>
+				<td>{{artisan.emailArtisan}}</td>
+				{% if(artisan.estOccupe == 1) %}
+				<td class="bg-danger"></td>
+				{% elseif(artisan.estOccupe == 0) %}
+				<td class="bg-success"</td>
+				{% endif %}
+				<td><a href="#" class="card-link" onClick="initMap2({{artisan.positionXArtisan}},{{artisan.positionYArtisan}})" data-bs-toggle='modal' data-bs-target='#mapArtisan' >Ouvrir google maps</a></td>
+				<td><a href="#" class="card-link" onClick="calculDistance({{devisClient[0].devisPositionX}},{{devisClient[0].devisPositionY}},{{artisan.positionXArtisan}},{{artisan.positionYArtisan}})">Calculer distance: <p id="distance"></p></a></td>
+				<td><a class="btn btn-primary dropdown-item" href="/assigner/{{devisClient[0].idDevis}}/{{artisan.idArtisan}}"><i class="bi bi-reply"></i>Assigner</a></td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+  </div>
+</div>
+</div>
+
+
+
+<div class="modal fade" id="mapClient" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLabel">{{devisClient[0].devisPositionX}},{{devisClient[0].devisPositionY}}</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="map1"></div> 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="mapArtisan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Position Artisan</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="map2"></div> 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://maps.google.com/maps/api/js?key=AIzaSyB6pMvczInWTWXzYwfMbbHvM0MUtvXLALc" type="text/javascript"></script>
+		<script async type="text/javascript">
+			// Fonction d'initialisation de la carte 
+			function initMap1() {
+				var latitude = {{devisClient[0].devisPositionX}};
+				var longitude = {{devisClient[0].devisPositionY}};
+				var myLatlng = new google.maps.LatLng(latitude,longitude);
+				var mapOptions = {
+				zoom: 16,
+				center: myLatlng,
+				mapTypeId: 'hybrid'
+				}
+				var map = new google.maps.Map(document.getElementById("map1"), mapOptions);
+
+				var marker = new google.maps.Marker({
+					position: myLatlng,
+					title:"Ici"
+				});
+
+				marker.setMap(map);
+			}
+			function initMap2(latitude, longitude) {
+				var myLatlng = new google.maps.LatLng(latitude,longitude);
+				var mapOptions = {
+				zoom: 16,
+				center: myLatlng,
+				mapTypeId: 'hybrid'
+				}
+				var map = new google.maps.Map(document.getElementById("map2"), mapOptions);
+
+				var marker = new google.maps.Marker({
+					position: myLatlng,
+					title:"Ici"
+				});
+
+				marker.setMap(map);
+			}
+
+			// Manage core logic by this variable
+			var Settlement = [];
+			Settlement.deg2rad = function(deg)
+			{
+				return (deg * Math.PI) / 180.0;
+			}
+			Settlement.rad2deg = function(angle) {
+				return angle * 57.29577951308232; 
+			}
+			function calculDistance(lat1, lon1, lat2, lon2)
+			{
+				theta = lon1 - lon2;
+				dist = Math.sin(Settlement.deg2rad(lat1)) * Math.sin(Settlement.deg2rad(lat2)) + Math.cos(Settlement.deg2rad(lat1)) * Math.cos(Settlement.deg2rad(lat2)) * Math.cos(Settlement.deg2rad(theta));
+				dist = Math.acos(dist);
+				dist = Settlement.rad2deg(dist);
+				var miles = dist * 60 * 1.1515;
+				var result = miles * 1.609344;
+				var new_number = result.toFixed(2);
+				return document.getElementById("distance").innerHTML = new_number+" Km";
+			}
+
+
+			window.onload = function(){
+				initMap1();
+			};
+		</script>
+{% endblock %}
